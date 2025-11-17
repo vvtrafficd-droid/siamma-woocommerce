@@ -132,10 +132,9 @@ export default function CartSlider() {
 
                 <div className="border-t border-gray-200">
                     <div className="flex w-full items-center justify-between py-3">
-                        <div className="text-xl text-gray-500">Estimate Total</div>
+                        <div className="text-xl text-gray-500"> Total</div>
                         <div className=" flex justify-end flex-col items-end">
                             <p className="text-xl font-semibold">{siteConfig.currency} {total.toFixed(2)}</p>
-                            <p className="text-xs text-right">Shipping & taxes calculated at checkout</p>
                         </div>
                     </div>
 
@@ -145,7 +144,7 @@ export default function CartSlider() {
                                 onClick={() => router.push("/checkout")}
                                 className="w-full bg-blue-600 text-white rounded-none py-6 cursor-pointer hover:bg-blue-500"
                             >
-                                Checkout
+                                Encomendar
                             </Button>
                         </SheetClose>
                     </div>

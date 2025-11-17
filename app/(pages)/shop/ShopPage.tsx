@@ -132,9 +132,7 @@ export default function ShopPage() {
                         {/* Top Bar */}
                         <div className="bg-white shadow-xs border border-gray-200 rounded-md px-2 md:px-4 py-3 flex flex-row justify-between items-center gap-2">
                             <MobileFilterMenu />
-                            <p className="flex-1 text-md text-gray-600">
-                                Showing {products.length} of {totalProducts} products
-                            </p>
+                     
 
                             <Select
                                 onValueChange={(value) => updateParams({ sortBy: value, page: 1 })}

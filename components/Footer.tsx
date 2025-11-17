@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { siteConfig } from "@/lib/config";
+import { Facebook, Instagram } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -11,64 +12,59 @@ const Footer = () => {
         
         {/* Column 1: Brand Info */}
         <div>
-          <h2 className="text-gray-900 text-lg font-semibold mb-4">{siteConfig.title}</h2>
-          <p className="text-sm mb-4">
-            Your one-stop shop for everyday essentials. Quality products, best prices, and fast delivery.
-          </p>
+         <img src="/logo.png" alt={siteConfig.title} className="w-44 h-auto mb-4" />
+        
           <div className="flex space-x-4">
-            {/* <Link href="#" className="hover:text-gray-900 hover:underline hover:underline"><Facebook size={18} /></Link>
+            <Link href="#" className="hover:text-gray-900 hover:underline "><Facebook size={18} /></Link>
             <Link href="#" className="hover:text-gray-900 hover:underline"><Instagram size={18} /></Link>
-            <Link href="#" className="hover:text-gray-900 hover:underline"><Twitter size={18} /></Link>
-            <Link href="#" className="hover:text-gray-900 hover:underline"><Youtube size={18} /></Link> */}
+
           </div>
         </div>
 
         {/* Column 2: Customer Service */}
         <div>
-          <h3 className="text-gray-900 text-lg font-semibold mb-4">Customer Service</h3>
+          <h3 className="text-gray-900 text-lg font-semibold mb-4">Informações</h3>
           <ul className="space-y-4 text-sm">
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">Contact Us</Link></li>
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">FAQs</Link></li>
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">Returns & Refunds</Link></li>
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">Shipping Info</Link></li>
+            <li><Link href="#" className="hover:text-gray-900 hover:underline">Contacto</Link></li>
+            <li><Link href="#" className="hover:text-gray-900 hover:underline">Devolução e Entrega</Link></li>
           </ul>
         </div>
 
         {/* Column 3: Information */}
         <div>
-          <h3 className="text-gray-900 text-lg font-semibold mb-4">Information</h3>
+          <h3 className="text-gray-900 text-lg font-semibold mb-4">Siamma</h3>
           <ul className="space-y-2 text-sm">
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">About Us</Link></li>
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">Privacy Policy</Link></li>
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">Terms & Conditions</Link></li>
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">Blog</Link></li>
+            <li><Link href="#" className="hover:text-gray-900 hover:underline">Sobre a Siamma</Link></li>
+            <li><Link href="#" className="hover:text-gray-900 hover:underline">Política de Privacidade</Link></li>
+            <li><Link href="#" className="hover:text-gray-900 hover:underline">Termos e Condições</Link></li>
+
           </ul>
         </div>
 
         {/* Column 4: Newsletter */}
         <div>
-          <h3 className="text-gray-900 text-lg font-semibold mb-4">Join Our Newsletter</h3>
+          <h3 className="text-gray-900 text-lg font-semibold mb-4">Receba ofertas</h3>
           <p className="text-sm mb-4">
-            Subscribe to get updates on new arrivals, offers, and more.
+            Receba ofertas e novidades diretamente no seu e-mail.
           </p>
           <form className="flex">
             <input
               type="email"
-              placeholder="Enter your email"
-              className="w-full px-3 py-2 rounded-l-md text-gray-800 focus:outline-none"
+              placeholder="Seu email"
+              className="w-full px-3 py-2 rounded-l-md text-gray-800 focus:outline-none border border-gray-300"
             />
             <button
               type="submit"
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md"
             >
-              Subscribe
+              Inscrever
             </button>
           </form>
         </div>
       </div>
 
       <div className="mt-10 border-t border-gray-300 pt-4 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} {siteConfig.title}. All rights reserved.
+        © {new Date().getFullYear()} {siteConfig.title}. Todos os direitos reservados
       </div>
     </footer>
   );

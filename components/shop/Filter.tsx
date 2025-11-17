@@ -20,7 +20,7 @@ const FilterShop = () => {
             try {
                 const res = await fetch(`${baseUrl}/api/categories`);
                 const data = await res.json();
-                setCategories([{ id: 0, name: "All" }, ...data]);
+                setCategories([{ id: 0, name: "Todos" }, ...data]);
             } catch (err) {
                 console.error("Failed to fetch categories:", err);
             }
@@ -40,12 +40,9 @@ const FilterShop = () => {
     };
     return (
         <aside className="hidden md:block md:col-span-1 space-y-4">
-            {/* Categories */}
-            <div className='bg-white shadow-xs border border-gray-200 rounded-md p-4'>
-                <h2 className='text-lg font-medium'>Filters</h2>
-            </div>
+   
             <div className='bg-white shadow-xs border border-gray-200 rounded-md '>
-                <h3 className="text-lg font-medium px-4 py-4 border-b  border-gray-200">Categories</h3>
+                <h3 className="text-lg font-medium px-4 py-4 border-b  border-gray-200">Catalógos</h3>
                 <ul className="px-2 py-2">
                     {categories.length==0 && (
                         <>

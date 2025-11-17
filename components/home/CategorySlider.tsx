@@ -20,7 +20,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ categories }) => {
     <section className="container mx-auto px-6 py-12 border-b border-gray-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-3xl font-semibold text-gray-800">Shop by Category</h2>
+        <h2 className="text-3xl font-semibold text-gray-800">Nossos catalógos</h2>
 
         <div className="flex gap-2">
           <button
