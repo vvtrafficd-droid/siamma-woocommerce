@@ -45,6 +45,7 @@ export default function ShopPage() {
     const maxPrice = Number(searchParams.get("maxPrice")) || 500;
     const sortBy = searchParams.get("sortBy") || "date";
     const page = Number(searchParams.get("page")) || 1;
+    const search = searchParams.get("search") || "";
 
     const priceRange: [number, number] = [minPrice, maxPrice];
 
@@ -65,6 +66,8 @@ export default function ShopPage() {
                 per_page: "12",
             });
 
+            if (search.trim()) params.set("search", search.trim());
+
             const res = await fetch(`${baseUrl}/api/products?${params.toString()}`);
             const data = await res.json();
 
@@ -84,7 +87,7 @@ export default function ShopPage() {
 
     useEffect(() => {
         fetchProducts();
-    }, [selectedCategory, priceRange[0], priceRange[1], sortBy, page]);
+    }, [selectedCategory, priceRange[0], priceRange[1], sortBy, page, search]);
 
     // ✅ Update URL parameters when user changes filter
     const updateParams = (updates: Record<string, string | number | undefined>) => {
