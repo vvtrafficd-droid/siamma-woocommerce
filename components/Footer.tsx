@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { siteConfig } from "@/lib/config";
 
 const Footer = () => {
   return (
@@ -10,7 +11,7 @@ const Footer = () => {
         
         {/* Column 1: Brand Info */}
         <div>
-          <h2 className="text-gray-900 text-lg font-semibold mb-4">Zain Mart</h2>
+          <h2 className="text-gray-900 text-lg font-semibold mb-4">{siteConfig.title}</h2>
           <p className="text-sm mb-4">
             Your one-stop shop for everyday essentials. Quality products, best prices, and fast delivery.
           </p>
@@ -67,7 +68,7 @@ const Footer = () => {
       </div>
 
       <div className="mt-10 border-t border-gray-300 pt-4 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} Zain Mart. All rights reserved.
+        © {new Date().getFullYear()} {siteConfig.title}. All rights reserved.
       </div>
     </footer>
   );

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Slider } from "@/components/ui/slider";
 import {
     Select,
     SelectContent,
@@ -19,6 +18,7 @@ import Pagination from "@/components/shop/Pagination";
 import ProductGridSkeleton from "@/components/shop/ProductGridSkeleton";
 import VariableProductCard from "@/components/VariableProductCard";
 import MobileFilterMenu from "@/components/shop/MobileFilterMenu";
+import CategorySlider from "@/components/home/CategorySlider";
 
 const sortOptions = [
     { label: "Default", value: "rating" },
@@ -38,19 +38,28 @@ export default function ShopPage() {
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const [totalProducts, setTotalProducts] = useState(0);
+    const [categories, setCategories] = useState<WooProductCategory[]>([]);
 
     // ✅ Read filters from URL
     const selectedCategory = Number(searchParams.get("category")) || 0;
-    const minPrice = Number(searchParams.get("minPrice")) || 0;
-    const maxPrice = Number(searchParams.get("maxPrice")) || 500;
     const sortBy = searchParams.get("sortBy") || "date";
     const page = Number(searchParams.get("page")) || 1;
     const search = searchParams.get("search") || "";
 
-    const priceRange: [number, number] = [minPrice, maxPrice];
 
     // 🧠 Fetch Categories
-
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await fetch(`${baseUrl}/api/categories`);
+                const data = await res.json();
+                setCategories(data || []);
+            } catch (err) {
+                console.error("Failed to fetch categories:", err);
+            }
+        };
+        fetchCategories();
+    }, []);
 
     // 🧩 Fetch Products
     const fetchProducts = async () => {
@@ -58,8 +67,6 @@ export default function ShopPage() {
             setLoading(true);
             const params = new URLSearchParams({
                 ...(selectedCategory && selectedCategory !== 0 && { category: selectedCategory.toString() }),
-                minPrice: priceRange[0].toString(),
-                maxPrice: priceRange[1].toString(),
                 orderby: sortBy.includes("price") ? "price" : "date",
                 order: sortBy.endsWith("desc") ? "desc" : "asc",
                 page: page.toString(),
@@ -87,7 +94,7 @@ export default function ShopPage() {
 
     useEffect(() => {
         fetchProducts();
-    }, [selectedCategory, priceRange[0], priceRange[1], sortBy, page, search]);
+    }, [selectedCategory, sortBy, page, search]);
 
     // ✅ Update URL parameters when user changes filter
     const updateParams = (updates: Record<string, string | number | undefined>) => {
@@ -106,10 +113,15 @@ export default function ShopPage() {
         <div className="bg-gray-50">
 
             <Breadcrumb
-                links={[
-                    { title: 'Home', href: '/' },
-                    { title: 'Shop', href: '#' },
-                ]} />
+                links={
+                    (pathname === "/")
+                        ? [{ title: 'Home', href: '/' }]
+                        : [
+                            { title: 'Home', href: '/' },
+                            { title: 'Shop', href: '#' },
+                          ]
+                } />
+            <CategorySlider categories={categories} />
             <div className="container mx-auto px-4 pb-10 mt-4">
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -145,7 +157,7 @@ export default function ShopPage() {
                         {loading ? (
                             <ProductGridSkeleton />
                         ) : products.length > 0 ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                                 {products.map((product) => {
                                     if (product.type === "simple") {
                                         return <ProductCard key={product.id} product={product} />;

@@ -2,13 +2,10 @@
 import Link from "next/link";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "./../ui/sheet";
 import { Button } from "./../ui/button";
-import FilterShop from "./Filter";
 import { WooProductCategory } from '@/types/woo';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
-import { Slider } from '../ui/slider';
 import { cn } from "@/lib/utils";
-import { siteConfig } from '@/lib/config';
 import { Skeleton } from '../ui/skeleton';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -24,10 +21,6 @@ const MobileFilterMenu = () => {
 
     const [categories, setCategories] = useState<WooProductCategory[]>([]);
 
-    const minPrice = Number(searchParams.get("minPrice")) || 0;
-    const maxPrice = Number(searchParams.get("maxPrice")) || 500;
-
-    const priceRange: [number, number] = [minPrice, maxPrice];
         useEffect(() => {
             const fetchCategories = async () => {
                 try {
@@ -116,26 +109,7 @@ const MobileFilterMenu = () => {
                             </ul>
                         </div>
 
-                        {/* Price Filter */}
-                        <div className='bg-white border border-gray-200 shadow-xs rounded-md'>
-                            <h2 className="text-lg font-medium px-4 py-4 border-b  border-gray-200">Price Range</h2>
-                            <div className="p-4 pt-6">
-                                <Slider
-                                    defaultValue={[minPrice, maxPrice]}
-                                    max={500}
-                                    step={10}
-                                    min={0}
-                                    value={priceRange}
-                                    onValueChange={(value) => {
-                                        updateParams({ minPrice: value[0], maxPrice: value[1], page: 1 });
-                                    }}
-                                />
-                                <div className="flex justify-between mt-2 text-sm text-gray-600">
-                                    <span>{siteConfig.currency} {priceRange[0]}</span>
-                                    <span>{siteConfig.currency} {priceRange[1]}</span>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 </SheetContent>
             </Sheet>

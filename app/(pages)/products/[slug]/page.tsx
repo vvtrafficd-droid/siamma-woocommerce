@@ -21,7 +21,7 @@ export async function generateMetadata(
 
   if (!res.ok) {
     return {
-      title: "Product not found | YourStoreName",
+      title: `Product not found | ${siteConfig.title}`,
       description: "Sorry, this product could not be found.",
     };
   }
@@ -32,12 +32,12 @@ export async function generateMetadata(
     title: `${product.name} | ${siteConfig.title}`,
     description:
       product.short_description?.replace(/<[^>]*>?/gm, "").slice(0, 150) ||
-      "Buy this amazing product at YourStoreName.",
+      `Buy this amazing product at ${siteConfig.title}.`,
     openGraph: {
       title: product.name,
       description:
         product.short_description?.replace(/<[^>]*>?/gm, "").slice(0, 150) ||
-        "Check out this product on YourStoreName.",
+        `Check out this product on ${siteConfig.title}.`,
       images: [
         {
           url: product.images?.[0]?.src || "/placeholder.png",
@@ -52,7 +52,7 @@ export async function generateMetadata(
       title: product.name,
       description:
         product.short_description?.replace(/<[^>]*>?/gm, "").slice(0, 150) ||
-        "Check out this product on YourStoreName.",
+        `Check out this product on ${siteConfig.title}.`,
       images: [product.images?.[0]?.src || "/placeholder.png"],
     },
   };

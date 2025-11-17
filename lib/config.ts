@@ -1,8 +1,8 @@
 export const siteConfig = {
     currency : 'Rs.',
-    logo: null,
-    logoName:"AshMart",
-    title:"AshMart",
+    logo: "/logo.png",
+    logoName:"Siamma - Produtos Alimentares",
+    title:"Siamma - Produtos Alimentares",
     description:"Next js based wooCommerce storefront.",
     minItemPrice:0,
     maxItemPrice:10000,
