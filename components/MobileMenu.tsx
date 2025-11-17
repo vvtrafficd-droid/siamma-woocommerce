@@ -5,10 +5,10 @@ import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "./ui/
 import { Button } from "./ui/button";
 
 const navItems = [
-    { name: "Home", href: "/" },
-    { name: "Shop", href: "/shop" },
-    { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
+    { name: "Início", href: "/" },
+    { name: "Loja", href: "/shop" },
+    { name: "Sobre", href: "/about" },
+    { name: "Contacto", href: "/contact" },
 ];
 
 const MobileMenu = () => {

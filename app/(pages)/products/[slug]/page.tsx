@@ -21,8 +21,8 @@ export async function generateMetadata(
 
   if (!res.ok) {
     return {
-      title: `Product not found | ${siteConfig.title}`,
-      description: "Sorry, this product could not be found.",
+      title: `Produto não encontrado | ${siteConfig.title}`,
+      description: "Desculpe, não foi possível encontrar este produto.",
     };
   }
 
@@ -32,12 +32,12 @@ export async function generateMetadata(
     title: `${product.name} | ${siteConfig.title}`,
     description:
       product.short_description?.replace(/<[^>]*>?/gm, "").slice(0, 150) ||
-      `Buy this amazing product at ${siteConfig.title}.`,
+      `Compre este produto incrível na ${siteConfig.title}.`,
     openGraph: {
       title: product.name,
       description:
         product.short_description?.replace(/<[^>]*>?/gm, "").slice(0, 150) ||
-        `Check out this product on ${siteConfig.title}.`,
+        `Veja este produto na ${siteConfig.title}.`,
       images: [
         {
           url: product.images?.[0]?.src || "/placeholder.png",
@@ -52,7 +52,7 @@ export async function generateMetadata(
       title: product.name,
       description:
         product.short_description?.replace(/<[^>]*>?/gm, "").slice(0, 150) ||
-        `Check out this product on ${siteConfig.title}.`,
+        `Veja este produto na ${siteConfig.title}.`,
       images: [product.images?.[0]?.src || "/placeholder.png"],
     },
   };
@@ -81,8 +81,8 @@ const ProductPage = async ({
     <>
       <Breadcrumb
         links={[
-          { title: "Home", href: "/" },
-          { title: "Shop", href: "/shop" },
+          { title: "Início", href: "/" },
+          { title: "Loja", href: "/shop" },
           { title: product.name, href: "#" },
         ]}
       />

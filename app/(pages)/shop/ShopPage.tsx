@@ -21,10 +21,10 @@ import MobileFilterMenu from "@/components/shop/MobileFilterMenu";
 import CategorySlider from "@/components/home/CategorySlider";
 
 const sortOptions = [
-    { label: "Default", value: "rating" },
-    { label: "Low to High", value: "price_asc" },
-    { label: "High to Low", value: "price_desc" },
-    { label: "Newest", value: "date" },
+    { label: "Padrão", value: "rating" },
+    { label: "Preço: baixo para alto", value: "price_asc" },
+    { label: "Preço: alto para baixo", value: "price_desc" },
+    { label: "Mais recentes", value: "date" },
 ];
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -115,10 +115,10 @@ export default function ShopPage() {
             <Breadcrumb
                 links={
                     (pathname === "/")
-                        ? [{ title: 'Home', href: '/' }]
+                        ? [{ title: 'Início', href: '/' }]
                         : [
-                            { title: 'Home', href: '/' },
-                            { title: 'Shop', href: '#' },
+                            { title: 'Início', href: '/' },
+                            { title: 'Loja', href: '#' },
                           ]
                 } />
             <CategorySlider categories={categories} />
@@ -139,7 +139,7 @@ export default function ShopPage() {
                                 defaultValue={sortBy}
                             >
                                 <SelectTrigger className="w-[100px] md:w-[200px] border border-gray-200 shadow-none">
-                                    <SelectValue placeholder="Sort by" />
+                                    <SelectValue placeholder="Ordenar por" />
                                 </SelectTrigger>
                                 <SelectContent className="bg-white border border-gray-200 ">
                                     {sortOptions.map((opt, id) => (
@@ -171,7 +171,7 @@ export default function ShopPage() {
                             </div>
                         ) : (
                             <div className="text-center py-20 text-gray-500">
-                                No products found.
+                                Nenhum produto encontrado.
                             </div>
                         )}
 

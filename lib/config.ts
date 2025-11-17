@@ -1,5 +1,5 @@
 export const siteConfig = {
-    currency : 'Rs.',
+    currency : '€',
     logo: "/logo.png",
     logoName:"Siamma - Produtos Alimentares",
     title:"Siamma - Produtos Alimentares",
@@ -15,7 +15,7 @@ interface navItems {
 }
 
 export const navItems:navItems[] = [
-  { name: "Home", href: "/" },
+  { name: "Início", href: "/" },
   // {
   //   name: "Shop",
   //   dropdown: [
@@ -26,9 +26,9 @@ export const navItems:navItems[] = [
   //   ],
   // },
   {
-    name  :"Shop",
+    name  :"Loja",
     href : "/shop",
   },
-  { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
+  { name: "Sobre", href: "/about" },
+  { name: "Contacto", href: "/contact" },
 ];

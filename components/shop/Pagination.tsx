@@ -62,7 +62,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
         >
           <i className="ri-arrow-left-line mr-1"></i>
           
-          <span className="hidden md:inline">Previous</span>
+          <span className="hidden md:inline">Anterior</span>
         </Button>
 
         {/* Page Numbers */}
@@ -92,7 +92,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
           onClick={() => updateParams({ page: page + 1 })}
           disabled={page === totalPages}
         >
-          <span className="hidden md:inline">Next</span>
+          <span className="hidden md:inline">Seguinte</span>
           <i className="ri-arrow-right-line ml-1"></i>
         </Button>
       </div>

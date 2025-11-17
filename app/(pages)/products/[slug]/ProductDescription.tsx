@@ -21,9 +21,9 @@ const ProductDescription = ({ product }: { product: WooProduct }) => {
     return (
         <Tabs defaultValue="description" className="w-full min-h-[400px] pb-18">
             <TabsList className='text-sm md:text-xl px-5 py-2 shadow-none bg-white w-full rounded-bottom'>
-                <TabsTrigger value="description" className=''>Description</TabsTrigger>
-                <TabsTrigger value="additional">Additional Information</TabsTrigger>
-                <TabsTrigger value="reviews">Reviews</TabsTrigger>
+                <TabsTrigger value="description" className=''>Descrição</TabsTrigger>
+                <TabsTrigger value="additional">Informação adicional</TabsTrigger>
+                <TabsTrigger value="reviews">Avaliações</TabsTrigger>
             </TabsList>
             <TabsContent value="description">{
                 product.description && (
@@ -40,20 +40,20 @@ const ProductDescription = ({ product }: { product: WooProduct }) => {
                 <div className='bg-white  shadow-sm  rounded-lg p-4 py-12 px-36'>
                     {product.brands.length > 0 &&
                         <div className='flex items-center p-4 border-b border-gray-200'>
-                            <p className='w-1/2'>Brand</p>
+                            <p className='w-1/2'>Marca</p>
                             <p className='w-1/2'>{product.brands.map(cat => cat.name).join(", ")}</p>
                         </div>
                     }
                     {product.tags.length > 0 &&
                         <div className='flex items-center p-4 border-b border-gray-200'>
-                            <p className='w-1/2'>Tags</p>
+                            <p className='w-1/2'>Etiquetas</p>
                             <p className='w-1/2'>{product.brands.map(cat => cat.name).join(", ")}</p>
                         </div>
                     }
                     {
                         product.weight != "" &&
                         <div className='flex items-center p-4 border-b border-gray-200'>
-                            <p className='w-1/2'>Weight (kg)</p>
+                            <p className='w-1/2'>Peso (kg)</p>
                             <p className='w-1/2'>
                                 <span>{product.weight}</span></p>
                         </div>
@@ -61,7 +61,7 @@ const ProductDescription = ({ product }: { product: WooProduct }) => {
                     {
                         product.dimensions.width != "" &&
                         <div className='flex items-center p-4 border-b border-gray-200'>
-                            <p className='w-1/2'>Dimension (width x height x length)</p>
+                            <p className='w-1/2'>Dimensões (largura x altura x comprimento)</p>
                             <p className='w-1/2'>
                                 <span>{product.dimensions.width}cm x {product.dimensions.height}cm x {product.dimensions.length}cm</span></p>
                         </div>

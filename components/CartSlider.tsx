@@ -46,7 +46,7 @@ export default function CartSlider() {
             <SheetContent side="right" className="w-full min-w-sm md:min-w-lg bg-white overflow-y-auto p-6 flex flex-col">
                 <div className="flex items-center justify-between ">
                     <SheetHeader>
-                        <SheetTitle className="font-medium text-2xl ">Your Cart</SheetTitle>
+                        <SheetTitle className="font-medium text-2xl ">O seu carrinho</SheetTitle>
                     </SheetHeader>
                     <SheetClose asChild id="cart-close">
                         <button>
@@ -57,12 +57,12 @@ export default function CartSlider() {
                 </div>
 
                 <div className="flex justify-between py-2 border-gray-300 border-b">
-                    <p>Products</p>
+                    <p>Produtos</p>
                     <p>Total</p>
                 </div>
                 <div className="space-y-2 flex-1">
                     {cart.length === 0 ? (
-                        <div className="py-10 text-center text-gray-500">Your cart is empty.</div>
+                        <div className="py-10 text-center text-gray-500">O seu carrinho está vazio.</div>
                     ) : (
                         cart.map((item) => (
                             <div
@@ -79,7 +79,7 @@ export default function CartSlider() {
                                             className="object-cover"
                                         />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-sm text-gray-400">No Image</div>
+                                        <div className="w-full h-full flex items-center justify-center text-sm text-gray-400">Sem imagem</div>
                                     )}
                                 </div>
 

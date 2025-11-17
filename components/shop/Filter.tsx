@@ -42,7 +42,7 @@ const FilterShop = () => {
         <aside className="hidden md:block md:col-span-1 space-y-4">
    
             <div className='bg-white shadow-xs border border-gray-200 rounded-md '>
-                <h3 className="text-lg font-medium px-4 py-4 border-b  border-gray-200">Catalógos</h3>
+                <h3 className="text-lg font-medium px-4 py-4 border-b  border-gray-200">Catálogos</h3>
                 <ul className="px-2 py-2">
                     {categories.length==0 && (
                         <>

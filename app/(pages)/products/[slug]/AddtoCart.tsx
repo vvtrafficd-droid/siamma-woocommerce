@@ -18,7 +18,7 @@ const AddToCart = ({product}:{product:any}) => {
       images: product.images[0]?.src || "",
       type: "simple"
     });
-    toast.success("Product added to cart!");
+    toast.success("Produto adicionado ao carrinho!");
   };
 
   return (
@@ -26,7 +26,7 @@ const AddToCart = ({product}:{product:any}) => {
       onClick={handleAdd}
       className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer"
     >
-    <i className="ri-shopping-cart-line mr-2"></i> Add to Cart
+    <i className="ri-shopping-cart-line mr-2"></i> Adicionar ao carrinho
     </button>
   );
 };

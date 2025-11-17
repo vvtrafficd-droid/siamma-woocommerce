@@ -83,7 +83,7 @@ const SimpleProductView = async ({product}:{product:WooProduct}) => {
         <div>
 
         {(product.on_sale) && (
-          <p className="text-sm text-green-600 mb-1 font-medium">On Sale 🎉</p>
+          <p className="text-sm text-green-600 mb-1 font-medium">Em promoção 🎉</p>
         )}
 
         <h1 className="text-4xl font-semibold mb-1">{product.name}</h1>
@@ -100,13 +100,13 @@ const SimpleProductView = async ({product}:{product:WooProduct}) => {
 
               ))}
               <span className="text-md text-gray-500 h-full flex items-center">
-                ({product.rating_count} Customer Reviews)
+                ({product.rating_count} avaliações)
               </span>
             </div>
           )}
 
           <div>
-            {product?.stock_status === "instock" ? <span className="text-blue-500"><i className="ri-checkbox-circle-line"></i> InStock</span> : <span className="text-red-500"><i className="ri-close-circle-line"></i> OutStock</span>}
+            {product?.stock_status === "instock" ? <span className="text-blue-500"><i className="ri-checkbox-circle-line"></i> Em stock</span> : <span className="text-red-500"><i className="ri-close-circle-line"></i> Sem stock</span>}
           </div>
 
         </div>
@@ -140,17 +140,17 @@ const SimpleProductView = async ({product}:{product:WooProduct}) => {
         <Separator className="bg-gray-300 my-3 mt-6" />
 
         {/* ✅ Add to Cart */}
-        {product?.stock_status === "instock" ? <AddToCart product={product}  /> : <Button className="bg-gray-300 border-gray-400 border px-5 py-2" disabled>Out of Stock</Button>}
+        {product?.stock_status === "instock" ? <AddToCart product={product}  /> : <Button className="bg-gray-300 border-gray-400 border px-5 py-2" disabled>Esgotado</Button>}
 
 
         <div className="mt-10 text-gray-500 text-md space-y-2">
           <div className="">
-            SKU: {product?.sku || 'N/A'}
+            SKU: {product?.sku || 'N/D'}
           </div>
           {/* ✅ Categories */}
           {product.categories?.length > 0 && (
             <div className="flex items-center mb-2">
-              <h3 className="">Categories:&nbsp;</h3>
+              <h3 className="">Categorias:&nbsp;</h3>
               <ul className="">
                 {product.categories.map((cat) => (
                   <span key={cat.id}>{cat.name}</span>

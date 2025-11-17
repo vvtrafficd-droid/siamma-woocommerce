@@ -91,8 +91,8 @@ const CheckoutPage = () => {
     
                 <Breadcrumb
                     links={[
-                        { title: 'Home', href: '/' },
-                        { title: 'Checkout', href: '#' },
+                        { title: 'Início', href: '/' },
+                        { title: 'Finalizar compra', href: '#' },
                     ]} />
     <section className="checkout w-full bg-gray-50">
       <div className="container mx-auto px-6 py-12">
@@ -105,52 +105,52 @@ const CheckoutPage = () => {
           <div className="lg:col-span-3 space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Shipping Details</CardTitle>
+                <CardTitle>Detalhes de envio</CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="firstName">First Name</Label>
+                  <Label htmlFor="firstName">Primeiro nome</Label>
                   <Input
                     id="firstName"
-                    placeholder="John"
+                    placeholder="João"
                     {...register("firstName", { required: true })}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="lastName">Last Name</Label>
+                  <Label htmlFor="lastName">Apelido</Label>
                   <Input
                     id="lastName"
-                    placeholder="Doe"
+                    placeholder="Silva"
                     {...register("lastName", { required: true })}
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <Label htmlFor="email">Email Address</Label>
+                  <Label htmlFor="email">Endereço de email</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="john@example.com"
+                    placeholder="joao@exemplo.com"
                     {...register("email", { required: true })}
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <Label htmlFor="address">Address</Label>
+                  <Label htmlFor="address">Morada</Label>
                   <Input
                     id="address"
-                    placeholder="House no, Street, City"
+                    placeholder="N.º, Rua, Localidade"
                     {...register("address", { required: true })}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="country">Country</Label>
+                  <Label htmlFor="country">País</Label>
                   <Input
                     id="country"
-                    placeholder="Pakistan"
+                    placeholder="Portugal"
                     {...register("country", { required: true })}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="zip">ZIP / Postal Code</Label>
+                  <Label htmlFor="zip">Código Postal</Label>
                   <Input
                     id="zip"
                     placeholder="12345"
@@ -158,10 +158,10 @@ const CheckoutPage = () => {
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone">Telemóvel</Label>
                   <Input
                     id="phone"
-                    placeholder="+92 300 1234567"
+                    placeholder="+351 912 345 678"
                     {...register("phone", { required: true })}
                   />
                 </div>
@@ -171,7 +171,7 @@ const CheckoutPage = () => {
             {/* Payment Method */}
             <Card>
               <CardHeader>
-                <CardTitle>Payment Method</CardTitle>
+                <CardTitle>Método de pagamento</CardTitle>
               </CardHeader>
               <CardContent>
                 <RadioGroup
@@ -188,7 +188,7 @@ const CheckoutPage = () => {
                       id="cod"
                       {...register("paymentMethod")}
                     />
-                    <Label htmlFor="cod">Cash on Delivery</Label>
+                    <Label htmlFor="cod">Pagamento na entrega</Label>
                   </div>
                 </RadioGroup>
               </CardContent>
@@ -198,11 +198,11 @@ const CheckoutPage = () => {
           {/* Right: Order Summary */}
           <Card className="lg:col-span-2 h-fit">
             <CardHeader>
-              <CardTitle>Your Order</CardTitle>
+              <CardTitle>A sua encomenda</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex w-full justify-between px-2 py-4 border-b border-gray-200 font-medium text-lg">
-                <p>Products</p>
+                <p>Produtos</p>
                 <p>Subtotal</p>
               </div>
               {orderItems.map((item) => (
@@ -240,7 +240,7 @@ const CheckoutPage = () => {
                 </span>
               </div>
               <div className="flex justify-between text-md px-2 py-4 font-medium border-b border-gray-200">
-                <span>Shipping</span>
+                <span>Envio</span>
                 <span>
                   {siteConfig.currency} {shipping.toFixed(2)}
                 </span>
@@ -260,7 +260,7 @@ const CheckoutPage = () => {
                 className="w-full cursor-pointer mt-6 bg-blue-600 text-white py-6 text-lg hover:bg-blue-500"
                 disabled={loading || orderItems.length === 0}
               >
-                {loading ? "Placing Order..." : "Place Order"}
+                {loading ? "A processar encomenda..." : "Finalizar encomenda"}
               </Button>
             </CardContent>
           </Card>
