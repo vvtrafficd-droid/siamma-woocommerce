@@ -13,6 +13,8 @@ import Image from "next/image";
 import { siteConfig } from "@/lib/config";
 import { useRouter } from "next/navigation";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { PostalCodeAutocomplete } from "@/components/PostalCodeAutocomplete";
+import { PostalCodeInfo, isValidPostalCode } from "@/lib/postalCodes";
 
 interface CheckoutFormData {
   firstName: string;
@@ -22,6 +24,9 @@ interface CheckoutFormData {
   addressComplement?: string;
   country: string;
   zip: string;
+  city?: string;
+  municipality?: string;
+  district?: string;
   phone: string;
   paymentMethod: string;
 }
@@ -30,7 +35,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 const CheckoutPage = () => {
   const router = useRouter();
-  const { register, handleSubmit, reset } = useForm<CheckoutFormData>({
+  const { register, handleSubmit, reset, setValue, watch } = useForm<CheckoutFormData>({
     defaultValues: { 
       paymentMethod: "cod",
       country: "Portugal" 
@@ -38,6 +43,7 @@ const CheckoutPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [selectedPostalCode, setSelectedPostalCode] = useState<PostalCodeInfo | null>(null);
 
   const { items, clearCart } = useCartStore();
   const orderItems = items;
@@ -49,7 +55,19 @@ const CheckoutPage = () => {
   const shipping = 250;
   const total = subtotal + shipping;
 
+  const handlePostalCodeSelect = (postalCode: PostalCodeInfo) => {
+    setSelectedPostalCode(postalCode);
+    setValue("city", postalCode.locality, { shouldValidate: true });
+    setValue("municipality", postalCode.municipality, { shouldValidate: true });
+    setValue("district", postalCode.district, { shouldValidate: true });
+  };
+
   const onSubmit = async (data: CheckoutFormData) => {
+    if (!isValidPostalCode(data.zip)) {
+      alert("Por favor, insira um código postal válido no formato XXXX-XXX");
+      return;
+    }
+    
     setLoading(true);
     try {
       const orderData = {
@@ -155,13 +173,35 @@ const CheckoutPage = () => {
                 </div>
                 <div>
                   <Label htmlFor="zip">Código Postal</Label>
-                  <Input
-                    id="zip"
-                    placeholder="12345"
-                    {...register("zip", { required: true })}
+                  <PostalCodeAutocomplete
+                    value={watch("zip") || ""}
+                    onChange={(value) => setValue("zip", value, { shouldValidate: true })}
+                    onSelect={handlePostalCodeSelect}
+                    placeholder="XXXX-XXX"
                   />
+                  {selectedPostalCode && (
+                    <div className="mt-1 text-xs text-green-600">
+                      📍 {selectedPostalCode.locality}, {selectedPostalCode.municipality}
+                    </div>
+                  )}
+                  {watch("zip") && !isValidPostalCode(watch("zip")) && (
+                    <div className="mt-1 text-xs text-red-600">
+                      Formato inválido. Use XXXX-XXX
+                    </div>
+                  )}
                 </div>
-                {/* Hidden country field with default value Portugal */}
+                <div>
+                  <Label htmlFor="city">Cidade</Label>
+                  <Input id="city" readOnly placeholder="Selecionado pelo código postal" {...register("city")} />
+                </div>
+                <div>
+                  <Label htmlFor="municipality">Concelho</Label>
+                  <Input id="municipality" readOnly placeholder="Selecionado pelo código postal" {...register("municipality")} />
+                </div>
+                <div>
+                  <Label htmlFor="district">Distrito</Label>
+                  <Input id="district" readOnly placeholder="Selecionado pelo código postal" {...register("district")} />
+                </div>
                 <input
                   type="hidden"
                   {...register("country")}
