@@ -50,6 +50,7 @@ const CheckoutPage = () => {
   const [selectedPostalCode, setSelectedPostalCode] = useState<PostalCodeInfo | null>(null);
   const [distanceKm, setDistanceKm] = useState<number | null>(null);
   const [deliveryEligible, setDeliveryEligible] = useState<boolean>(true);
+  const [customerPrefilled, setCustomerPrefilled] = useState<boolean>(false);
 
   const { items, clearCart } = useCartStore();
   const orderItems = items;
@@ -67,6 +68,45 @@ const CheckoutPage = () => {
     setValue("municipality", postalCode.municipality, { shouldValidate: true });
     setValue("district", postalCode.district, { shouldValidate: true });
   };
+
+  React.useEffect(() => {
+    const email = watch("email");
+    if (!email || email.length < 5) {
+      setCustomerPrefilled(false);
+      return;
+    }
+    const controller = new AbortController();
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/customers/find?email=${encodeURIComponent(email)}`, { signal: controller.signal });
+        if (!res.ok) {
+          setCustomerPrefilled(false);
+          return;
+        }
+        const data = await res.json();
+        const c = data.customer || {};
+        const b = c.billing || {};
+        const s = c.shipping || {};
+        setValue("firstName", b.first_name || c.first_name || "", { shouldValidate: true });
+        setValue("lastName", b.last_name || c.last_name || "", { shouldValidate: true });
+        setValue("address", b.address_1 || s.address_1 || "", { shouldValidate: true });
+        setValue("addressComplement", b.address_2 || "", { shouldValidate: true });
+        setValue("city", b.city || s.city || "", { shouldValidate: true });
+        setValue("municipality", b.city || s.city || "", { shouldValidate: true });
+        setValue("district", b.state || s.state || "", { shouldValidate: true });
+        setValue("zip", b.postcode || s.postcode || "", { shouldValidate: true });
+        setValue("country", b.country || s.country || "Portugal", { shouldValidate: true });
+        setValue("phone", b.phone || "", { shouldValidate: true });
+        setCustomerPrefilled(true);
+      } catch {
+        setCustomerPrefilled(false);
+      }
+    }, 600);
+    return () => {
+      clearTimeout(t);
+      controller.abort();
+    };
+  }, [watch("email")]);
 
   React.useEffect(() => {
     const zip = watch("zip");
@@ -221,6 +261,9 @@ const CheckoutPage = () => {
                     placeholder="joao@exemplo.com"
                     {...register("email", { required: true })}
                   />
+                  {customerPrefilled && (
+                    <div className="mt-1 text-xs text-green-600">Dados do cliente carregados</div>
+                  )}
                 </div>
                 <div className="sm:col-span-2">
                   <Label>Forma de entrega</Label>
