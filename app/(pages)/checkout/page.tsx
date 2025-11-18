@@ -356,23 +356,14 @@ const CheckoutPage = () => {
                 <CardTitle>Método de pagamento</CardTitle>
               </CardHeader>
               <CardContent>
-                <RadioGroup
-                  defaultValue="cod"
-                  onValueChange={(val) =>
-                  (document.querySelector<HTMLInputElement>(
-                    "input[name='paymentMethod']"
-                  )!.value = val)
-                  }
-                >
-                  <div className="flex items-center space-x-3">
-                    <RadioGroupItem
-                      value="cod"
-                      id="cod"
-                      {...register("paymentMethod")}
-                    />
-                    <Label htmlFor="cod">Pagamento na entrega</Label>
+                <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 bg-gray-50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-green-600" />
+                    <span className="font-medium">Pagamento na entrega</span>
                   </div>
-                </RadioGroup>
+                  <span className="text-xs text-muted-foreground">fixo</span>
+                </div>
+                <input type="hidden" value="cod" {...register("paymentMethod")} />
               </CardContent>
             </Card>
           </div>
@@ -387,33 +378,25 @@ const CheckoutPage = () => {
                 <p>Produtos</p>
                 <p>Subtotal</p>
               </div>
-              {orderItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex justify-between items-center text-md px-2 py-4 border-b border-gray-200 gap-4"
-                >
-                  <div className="relative w-20 h-20 rounded-sm border-gray-300 border flex justify-center">
-                    <Image
-                      src={item.images}
-                      alt={item.name}
-                      width={50}
-                      height={50}
-                      className="w-full object-cover"
-                    />
-                    <span className="absolute bg-black w-6 h-6 rounded-full text-white -top-2 -right-2 text-sm text-center flex items-center justify-center">
-                      {item.quantity}
-                    </span>
+              <div className="max-h-64 overflow-y-auto">
+                {orderItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex justify-between items-center px-2 py-2 text-sm border-b border-gray-200"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{item.name}</p>
+                      <p className="text-xs text-gray-500">{item.type === "variable" && item.variationName}</p>
+                    </div>
+                    <div className="ml-2 flex items-center gap-2">
+                      <span className="text-xs text-gray-500">x{item.quantity}</span>
+                      <span className="text-sm">
+                        {siteConfig.currency} {(+item.price * item.quantity).toFixed(2)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium">{item.name}</p>
-                    <p>{item.type === "variable" && item.variationName}</p>
-                  </div>
-                  <span>
-                    {siteConfig.currency}{" "}
-                    {(+item.price * item.quantity).toFixed(2)}
-                  </span>
-                </div>
-              ))}
+                ))}
+              </div>
 
               <div className="flex justify-between text-md px-2 py-4 font-medium border-b border-gray-200">
                 <span>Subtotal</span>
