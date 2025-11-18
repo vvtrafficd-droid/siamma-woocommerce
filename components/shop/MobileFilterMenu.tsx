@@ -96,7 +96,7 @@ const MobileFilterMenu = () => {
                                                     : "hover:bg-gray-100 text-gray-700"
                                             )}
                                         >
-                                            <p>{cat.name}</p>
+                                        <p className="capitalize">{cat.name}</p>
                                             {cat.count != null && <p className={cn(
                                                 "w-5 h-5 text-center text-xs flex items-center justify-center rounded-full transition",
                                                 selectedCategory === cat.id

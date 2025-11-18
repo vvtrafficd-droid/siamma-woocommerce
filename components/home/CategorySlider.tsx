@@ -77,7 +77,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ categories }) => {
                     <i className="ri-image-2-line text-gray-400 text-2xl"></i>
                   </div>
                 )}
-                <p className="mt-2 text-gray-700 font-medium text-center text-sm truncate">
+                <p className="mt-2 text-gray-700 font-medium text-center text-sm truncate capitalize">
                   {cat.name}
                 </p>
               </Link>

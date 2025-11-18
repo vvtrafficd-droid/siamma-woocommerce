@@ -67,7 +67,7 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
       <div className="mt-2 px-3 pb-4">
         <div className="text-xs text-gray-400">
           {categories?.map((cat) => (
-            <span key={cat.id} className="mr-2">
+            <span key={cat.id} className="mr-2 capitalize">
               {cat.name}
             </span>
           ))}

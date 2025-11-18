@@ -65,7 +65,7 @@ const VariableProductCard: React.FC<{ product: WooProduct }> = ({ product }) => 
         {/* Category */}
         <div className="text-xs text-gray-400">
           {categories?.map((cat) => (
-            <span key={cat.id} className="mr-2">{cat.name}</span>
+            <span key={cat.id} className="mr-2 capitalize">{cat.name}</span>
           ))}
         </div>
 

@@ -7,14 +7,12 @@ export async function GET() {
     let page = 1;
     const all: any[] = [];
 
-    // Fetch all category pages, excluding ID 15
-    // and including empty categories to match admin counts
     while (true) {
       const resp = await wcApi.get("products/categories", {
         per_page,
         page,
         exclude: [15],
-        hide_empty: false,
+        hide_empty: true,
       });
       const { data, headers } = resp;
       const totalPages = Number(headers["x-wp-totalpages"]) || 1;
@@ -26,8 +24,9 @@ export async function GET() {
       if (page >= totalPages) break;
       page += 1;
     }
-
-    return NextResponse.json(all, { status: 200 });
+    const filtered = all.filter((c) => (c?.count ?? 0) > 0);
+    filtered.sort((a, b) => (b?.count ?? 0) - (a?.count ?? 0));
+    return NextResponse.json(filtered, { status: 200 });
   } catch (error: any) {
     console.error("❌ Error fetching categories:", error.response?.data || error.message);
 
