@@ -67,9 +67,9 @@ export default function CartSlider() {
                         cart.map((item) => (
                             <div
                                 key={item.id}
-                                className="flex gap-5 p-3 px-0 rounded-md border-gray-200 "
+                                className="flex gap-3 p-2 px-0 rounded-md border-gray-200 "
                             >
-                                <div className="relative w-24 h-24 rounded overflow-hidden bg-gray-100">
+                                <div className="relative w-16 h-16 rounded overflow-hidden bg-gray-100">
                                     {item.images ? (
                                         // Next/Image requires a domain or remote patterns configured; fallback to img tag if needed
                                         <Image
@@ -84,42 +84,42 @@ export default function CartSlider() {
                                 </div>
 
                                 <div className="flex-1">
-                                    <div className="font-medium text-xl">{item.name}</div>
-                                    <div className="text-md text-gray-600">{siteConfig.currency} {item.price}</div>
-                                    {item?.variationName && <div className="text-md text-gray-600"> {item?.variationName}</div>}
+                                    <div className="font-medium text-sm line-clamp-2">{item.name}</div>
+                                    <div className="text-xs text-gray-600">{siteConfig.currency} {item.price}</div>
+                                    {item?.variationName && <div className="text-xs text-gray-600"> {item?.variationName}</div>}
 
 
-                                    <div className="flex items-center mt-2">
+                                    <div className="flex items-center mt-1">
                                         <div className="flex items-center border border-gray-300">
                                             <button
                                                 onClick={() => decreaseQty(item.id)}
-                                                className="flex items-center justify-center w-8 h-8 rounded"
+                                                className="flex items-center justify-center w-6 h-6 rounded"
                                                 aria-label="Decrease quantity"
                                             >
-                                                <Minus className="w-4 h-4" />
+                                                <Minus className="w-3 h-3" />
                                             </button>
 
-                                            <div className="px-3 min-w-12 text-center">{item.quantity}</div>
+                                            <div className="px-2 min-w-10 text-center text-sm">{item.quantity}</div>
 
                                             <button
                                                 onClick={() => increaseQty(item.id)}
-                                                className="flex items-center justify-center w-8 h-8 rounded"
+                                                className="flex items-center justify-center w-6 h-6 rounded"
                                                 aria-label="Increase quantity"
                                             >
-                                                <Plus className="w-4 h-4" />
+                                                <Plus className="w-3 h-3" />
                                             </button>
                                         </div>
 
                                         <button
                                             onClick={() => removeFromCart(item.id)}
-                                            className="ml-2 w-8 h-8 text-gray-600 bg-gray-200  border-gray-300 border flex items-center justify-center"
+                                            className="ml-2 w-6 h-6 text-gray-600 bg-gray-200  border-gray-300 border flex items-center justify-center"
                                         >
-                                            <Trash className="w-4 h-4" />
+                                            <Trash className="w-3 h-3" />
                                         </button>
                                     </div>
                                 </div>
                                 <div>
-                                    <p className="text-lg text-right">{siteConfig.currency}<br /> {Math.floor(+item.price * +item.quantity).toFixed(2)}</p>
+                                    <p className="text-sm text-right">{siteConfig.currency}<br /> {Math.floor(+item.price * +item.quantity).toFixed(2)}</p>
                                 </div>
 
                             </div>
