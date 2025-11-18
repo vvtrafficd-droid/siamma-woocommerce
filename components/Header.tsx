@@ -1,8 +1,17 @@
-import React from 'react'
+"use client";
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { useAuthStore } from '@/store/authStore'
+import { useRouter } from 'next/navigation'
 
 const Header = () => {
+  const router = useRouter();
+  const { email, logout } = useAuthStore();
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
   return (
     <section className='hidden md:block bg-gray-800 text-white'>
       <div className='container mx-auto px-6 py-2 grid grid-cols-3 items-center'>
@@ -38,11 +47,23 @@ const Header = () => {
 
         <div className='flex items-center justify-end gap-2'>
           <Button asChild variant='outline' className='bg-transparent border-white/40 text-white hover:bg-white/10'>
-            <Link href='/register'>Registar</Link>
+            <Link href='/orders'>Meus pedidos</Link>
           </Button>
           <Button asChild variant='outline' className='bg-transparent border-white/40 text-white hover:bg-white/10'>
-            <Link href='/login'>Entrar</Link>
+            <Link href='/account'>Meus dados</Link>
           </Button>
+          {hydrated && email && (
+            <Button
+              variant='outline'
+              className='bg-transparent border-white/40 text-white hover:bg-white/10'
+              onClick={() => {
+                logout();
+                router.push('/');
+              }}
+            >
+              Sair
+            </Button>
+          )}
         </div>
       </div>
     </section>
