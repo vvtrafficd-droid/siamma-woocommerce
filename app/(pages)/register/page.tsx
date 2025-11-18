@@ -11,6 +11,7 @@ import { PostalCodeAutocomplete } from "@/components/PostalCodeAutocomplete";
 import { PostalCodeInfo, isValidPostalCode } from "@/lib/postalCodes";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
+import { PhoneInput } from "@/components/PhoneInput";
 
 type RegisterForm = {
   firstName: string;
@@ -132,7 +133,11 @@ export default function RegisterPage() {
                 <input type="hidden" {...register("country")} value="Portugal" />
                 <div className="sm:col-span-2">
                   <Label htmlFor="phone">Telemóvel</Label>
-                  <Input id="phone" placeholder="+351 912 345 678" {...register("phone", { required: true })} />
+                  <PhoneInput
+                    id="phone"
+                    value={watch("phone") || ""}
+                    onChange={(v) => setValue("phone", v, { shouldValidate: true })}
+                  />
                 </div>
                 <div className="sm:col-span-2">
                   <Button type="submit" className="w-full bg-green-600 text-white py-6 text-lg" disabled={loading}>

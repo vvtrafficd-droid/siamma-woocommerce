@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { Truck, Store } from "lucide-react";
 import { PostalCodeAutocomplete } from "@/components/PostalCodeAutocomplete";
 import { PostalCodeInfo, isValidPostalCode } from "@/lib/postalCodes";
+import { PhoneInput } from "@/components/PhoneInput";
 
 interface CheckoutFormData {
   firstName: string;
@@ -384,10 +385,10 @@ const CheckoutPage = () => {
                 />
                 <div className="sm:col-span-2">
                   <Label htmlFor="phone">Telemóvel</Label>
-                  <Input
+                  <PhoneInput
                     id="phone"
-                    placeholder="+351 912 345 678"
-                    {...register("phone", { required: true })}
+                    value={watch("phone") || ""}
+                    onChange={(v) => setValue("phone", v, { shouldValidate: true })}
                   />
                 </div>
               </CardContent>
