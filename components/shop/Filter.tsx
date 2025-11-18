@@ -39,9 +39,9 @@ const FilterShop = () => {
         router.push(`${pathname}?${newParams.toString()}`);
     };
     return (
-        <aside className="hidden md:block md:col-span-1 space-y-4">
+        <aside className="hidden md:block md:col-span-1 md:sticky md:top-24 md:self-start space-y-4">
    
-            <div className='bg-white shadow-xs border border-gray-200 rounded-md '>
+            <div className='bg-white shadow-xs border border-gray-200 rounded-md max-h-[calc(100vh-8rem)] overflow-y-auto'>
                 <h3 className="text-lg font-medium px-4 py-4 border-b  border-gray-200">Catálogos</h3>
                 <ul className="px-2 py-2">
                     {categories.length==0 && (
