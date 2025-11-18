@@ -19,6 +19,7 @@ interface CheckoutFormData {
   lastName: string;
   email: string;
   address: string;
+  addressComplement?: string;
   country: string;
   zip: string;
   phone: string;
@@ -30,7 +31,10 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 const CheckoutPage = () => {
   const router = useRouter();
   const { register, handleSubmit, reset } = useForm<CheckoutFormData>({
-    defaultValues: { paymentMethod: "cod" },
+    defaultValues: { 
+      paymentMethod: "cod",
+      country: "Portugal" 
+    },
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -141,12 +145,12 @@ const CheckoutPage = () => {
                     {...register("address", { required: true })}
                   />
                 </div>
-                <div>
-                  <Label htmlFor="country">País</Label>
+                <div className="sm:col-span-2">
+                  <Label htmlFor="addressComplement">Complemento do endereço (opcional)</Label>
                   <Input
-                    id="country"
-                    placeholder="Portugal"
-                    {...register("country", { required: true })}
+                    id="addressComplement"
+                    placeholder="Andar, apartamento, etc."
+                    {...register("addressComplement")}
                   />
                 </div>
                 <div>
@@ -157,6 +161,12 @@ const CheckoutPage = () => {
                     {...register("zip", { required: true })}
                   />
                 </div>
+                {/* Hidden country field with default value Portugal */}
+                <input
+                  type="hidden"
+                  {...register("country")}
+                  value="Portugal"
+                />
                 <div className="sm:col-span-2">
                   <Label htmlFor="phone">Telemóvel</Label>
                   <Input
