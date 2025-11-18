@@ -17,21 +17,21 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ categories }) => {
   const swiperRef = useRef<any>(null);
 
   return (
-    <section className="container mx-auto px-6 py-12 border-b border-gray-200">
+    <section className="container mx-auto px-6 py-6 md:py-8 border-b border-gray-200">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-3xl font-semibold text-gray-800">Os nossos catálogos</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">Os nossos catálogos</h2>
 
         <div className="flex gap-2">
           <button
             onClick={() => swiperRef.current?.slidePrev()}
-            className="p-2 px-3 bg-white border-gray-200 border hover:bg-blue-50 transition"
+            className="p-2 px-3 bg-white border-gray-200 border rounded-md hover:border-green-300 hover:bg-green-50 transition"
           >
             <i className="ri-arrow-left-s-line text-xl"></i>
           </button>
           <button
             onClick={() => swiperRef.current?.slideNext()}
-            className="p-2 px-3 bg-white border-gray-200 border hover:bg-blue-50 transition"
+            className="p-2 px-3 bg-white border-gray-200 border rounded-md hover:border-green-300 hover:bg-green-50 transition"
           >
             <i className="ri-arrow-right-s-line text-xl"></i>
           </button>
@@ -42,40 +42,42 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ categories }) => {
       <Swiper
         modules={[Navigation, Autoplay]}
         autoplay={{
-          delay: 3000,
+          delay: 2500,
           disableOnInteraction: true,
         }}
         loop
-        spaceBetween={20}
+        spaceBetween={12}
         slidesPerView={2}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         breakpoints={{
           640: { slidesPerView: 3 },
           768: { slidesPerView: 4 },
           1024: { slidesPerView: 6 },
+          1280: { slidesPerView: 8 },
         }}
       >
         {categories
           .filter((cat) => cat.id !== 15) // optional exclusion
           .map((cat) => (
             <SwiperSlide key={cat.id}>
-              <Link href={`/shop?category=${cat.id}`} className="rounded-lg p-4 flex flex-col items-center justify-center transition">
+              <Link href={`/shop?category=${cat.id}`} className="group bg-white border border-gray-200/80 rounded-md p-3 flex flex-col items-center justify-center transition-all duration-200 hover:border-green-300 hover:shadow-sm">
                 {cat.image?.src ? (
-                  <div className="w-[120px] h-[120px] bg-gray-100 rounded-full flex items-center justify-center">
+                  <div className="relative w-20 h-20 rounded-full overflow-hidden ring-1 ring-gray-200 group-hover:ring-green-300">
                     <Image
                       src={cat.image.src}
                       alt={cat.name}
-                      width={60}
-                      height={60}
+                      fill
+                      className="object-cover"
+                      sizes="80px"
                       loading="lazy"
                     />
                   </div>
                 ) : (
-                  <div className="w-[120px] h-[120px] bg-gray-100 rounded-full flex items-center justify-center">
-                    <i className="ri-image-2-line text-gray-400 text-3xl"></i>
+                  <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center ring-1 ring-gray-200">
+                    <i className="ri-image-2-line text-gray-400 text-2xl"></i>
                   </div>
                 )}
-                <p className="mt-3 text-gray-700 font-medium text-center text-sm">
+                <p className="mt-2 text-gray-700 font-medium text-center text-sm truncate">
                   {cat.name}
                 </p>
               </Link>

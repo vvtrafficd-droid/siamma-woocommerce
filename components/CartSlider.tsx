@@ -38,7 +38,7 @@ export default function CartSlider() {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative hover:text-blue-600 cursor-pointer">
+                <Button variant="ghost" size="icon" className="relative hover:text-green-600 cursor-pointer">
                     <i className="ri-shopping-cart-line text-xl"></i> {cart.length > 0 && (<span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1.5">{cart.length}</span>)}
                 </Button>
             </SheetTrigger>
@@ -142,7 +142,7 @@ export default function CartSlider() {
                         <SheetClose asChild>
                             <Button
                                 onClick={() => router.push("/checkout")}
-                                className="w-full bg-blue-600 text-white rounded-none py-6 cursor-pointer hover:bg-blue-500"
+                                className="w-full bg-blue-600 text-white rounded-none py-6 cursor-pointer hover:bg-green-500"
                             >
                                 Encomendar
                             </Button>

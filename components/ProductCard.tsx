@@ -58,7 +58,7 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
         {/* Title */}
         <Link
           href={`/products/${slug}`}
-          className="text-lg font-medium text-gray-800 transition line-clamp-2 hover:text-blue-600"
+          className="text-lg font-medium text-gray-800 transition line-clamp-2 hover:text-green-600"
         >
           {name}
         </Link>

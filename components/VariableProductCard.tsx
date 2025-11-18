@@ -67,7 +67,7 @@ const VariableProductCard: React.FC<{ product: WooProduct }> = ({ product }) => 
         {/* Title */}
         <Link
           href={`/products/${slug}`}
-          className="text-lg font-medium text-gray-800 transition line-clamp-2 hover:text-blue-600"
+          className="text-lg font-medium text-gray-800 transition line-clamp-2 hover:text-green-600"
         >
           {name}
         </Link>
@@ -101,7 +101,7 @@ const VariableProductCard: React.FC<{ product: WooProduct }> = ({ product }) => 
         {/* <div className="flex gap-2 pt-3">
           <Link
             href={`/products/${slug}`}
-            className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center"
+            className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-green-700 transition text-center"
           >
             <i className="ri-eye-line mr-2"></i> View Product
           </Link>

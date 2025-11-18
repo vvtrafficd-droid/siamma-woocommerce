@@ -41,7 +41,7 @@ const MobileMenu = () => {
                             <SheetClose asChild key={item.name}>
                                 <Link
                                     href={item.href}
-                                    className="text-gray-700 font-medium hover:text-blue-600 transition"
+                                    className="text-gray-700 font-medium hover:text-green-600 transition"
                                 >
                                     {item.name}
                                 </Link>

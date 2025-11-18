@@ -73,7 +73,7 @@ const Hero = () => {
                                         </div>
                                         <h2 className="text-2xl md:text-3xl font-medium text-gray-800 mb-4 md:mb-12">{slide.title}</h2>
                                         <p className="text-sm md:text-md text-gray-600 mb-6">{slide.description}</p>
-                                        <Link href={`/products/${slide.slug}`} className="bg-[#1c274c] text-white px-6 py-3 rounded-md hover:bg-blue-700 transition text-sm mt-4">
+                                        <Link href={`/products/${slide.slug}`} className="bg-[#1c274c] text-white px-6 py-3 rounded-md hover:bg-green-700 transition text-sm mt-4">
                                             Shop Now
                                         </Link>
                                     </div>

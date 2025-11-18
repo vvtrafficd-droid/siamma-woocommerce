@@ -216,8 +216,8 @@ const VariableProductView = ({ product }: { product: WooProduct }) => {
                           key={opt}
                           className={`cursor-pointer border rounded-lg px-4 py-2 text-sm font-medium transition-all ${isSelected
                             ? "border-blue-600 bg-blue-200 text-blue-800"
-                            : "border-gray-300 hover:border-blue-400"
-                            }`}
+                            : "border-gray-300 hover:border-green-400"
+                          }`}
                         >
                           <input
                             type="radio"

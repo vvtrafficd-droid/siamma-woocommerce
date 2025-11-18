@@ -17,7 +17,7 @@ const OrderSuccessPage = () => {
       </p>
 
       <Button
-        className="bg-blue-600 text-white hover:bg-blue-500 px-8 py-6 text-lg"
+        className="bg-blue-600 text-white hover:bg-green-500 px-8 py-6 text-lg"
         onClick={() => router.push("/")}
       >
         Voltar ao início
