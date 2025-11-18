@@ -15,8 +15,7 @@ const VariableProductCard: React.FC<{ product: WooProduct }> = ({ product }) => 
     type,
     price,
     variations = [],
-    average_rating,
-    rating_count,
+    
   } = product;
 
   const isVariable = type === "variable";
@@ -32,7 +31,6 @@ const VariableProductCard: React.FC<{ product: WooProduct }> = ({ product }) => 
   const maxPrice = prices.length ? Math.max(...prices) : minPrice;
 
   // ⭐ Convert rating to number
-  const rating = parseFloat(average_rating || "0");
 
   return (
     <div className="group overflow-hidden transition-all duration-300 bg-white border border-gray-200 rounded-md">
@@ -48,6 +46,13 @@ const VariableProductCard: React.FC<{ product: WooProduct }> = ({ product }) => 
           className="object-cover w-full group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
+        <button
+          type="button"
+          className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-green-700 flex items-center justify-center shadow-md"
+          aria-label="Ver produto"
+        >
+          <i className="ri-add-line text-lg"></i>
+        </button>
         {on_sale && (
           <span className="absolute top-3 right-3 bg-blue-500 text-white text-sm font-medium px-3 py-1 rounded-full">
             Sale
@@ -72,22 +77,7 @@ const VariableProductCard: React.FC<{ product: WooProduct }> = ({ product }) => 
           {name}
         </Link>
 
-        {/* ⭐ Ratings */}
-        {rating_count >= 0 && (
-          <div className="flex items-center gap-1 text-xs">
-            {[...Array(5)].map((_, i) => (
-                <i key={i} className={"ri-star-fill " +`${
-                  i < Math.round(rating)
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-gray-300"
-                }`}></i>
-              
-            ))}
-            <span className="text-xs text-gray-500 h-full flex items-center">
-              ({rating_count})
-            </span>
-          </div>
-        )}
+        
 
         {/* 💰 Price */}
         <div className="flex items-center gap-2 mt-2">
@@ -97,15 +87,7 @@ const VariableProductCard: React.FC<{ product: WooProduct }> = ({ product }) => 
             </span>
         </div>
 
-        {/* 🛒 Button */}
-        {/* <div className="flex gap-2 pt-3">
-          <Link
-            href={`/products/${slug}`}
-            className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-green-700 transition text-center"
-          >
-            <i className="ri-eye-line mr-2"></i> View Product
-          </Link>
-        </div> */}
+        
       </div>
     </div>
   );

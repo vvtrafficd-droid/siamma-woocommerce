@@ -2,7 +2,8 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import AddToCart from "@/app/(pages)/products/[slug]/AddtoCart";
+import { useCartStore } from "@/store/cartStore";
+import toast from "react-hot-toast";
 import { WooProduct } from "@/types/woo";
 import { siteConfig } from "@/lib/config";
 
@@ -14,18 +15,14 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
     regular_price,
     sale_price,
     on_sale,
-    average_rating,
-    rating_count,
     categories,
     images,
   } = product;
 
   const imageUrl = images?.[0]?.src || "/no-image.png";
-  const rating = parseFloat(average_rating || "0");
 
   return (
     <div className="group overflow-hidden transition-all duration-300 bg-white border border-gray-200 rounded-md">
-      {/* Product Image */}
       <Link
         href={`/products/${slug}`}
         className="block relative w-full rounded-md aspect-square p-2 bg-gray-50 overflow-hidden"
@@ -37,6 +34,29 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
           className="object-cover w-full group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const addToCart = useCartStore.getState().addToCart;
+            addToCart({
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+              price: product.price,
+              regular_price: product.regular_price,
+              sale_price: product.sale_price,
+              images: imageUrl,
+              type: "simple",
+            });
+            toast.success("Produto adicionado ao carrinho!");
+          }}
+          className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-green-700 flex items-center justify-center shadow-md"
+          aria-label="Adicionar ao carrinho"
+        >
+          <i className="ri-add-line text-lg"></i>
+        </button>
         {on_sale && (
           <span className="absolute top-3 right-3 bg-blue-500 text-white text-sm font-medium px-3 py-1 rounded-full">
             Sale
@@ -44,9 +64,7 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
         )}
       </Link>
 
-      {/* Product Details */}
       <div className="mt-2 px-3 pb-4">
-        {/* Category */}
         <div className="text-xs text-gray-400">
           {categories?.map((cat) => (
             <span key={cat.id} className="mr-2">
@@ -55,7 +73,6 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
           ))}
         </div>
 
-        {/* Title */}
         <Link
           href={`/products/${slug}`}
           className="text-lg font-medium text-gray-800 transition line-clamp-2 hover:text-green-600"
@@ -63,24 +80,7 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
           {name}
         </Link>
 
-        {/* ⭐ Ratings */}
-        {rating_count >= 0 && (
-          <div className="flex items-center gap-1 text-xs">
-            {[...Array(5)].map((_, i) => (
-                <i key={i} className={"ri-star-fill " +`${
-                  i < Math.round(rating)
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-gray-300"
-                }`}></i>
-              
-            ))}
-            <span className="text-xs text-gray-500 h-full flex items-center">
-              ({rating_count})
-            </span>
-          </div>
-        )}
-
-        {/* 💰 Price */}
+        
         <div className="flex items-center gap-2 mt-2">
           {on_sale ? (
             <>
@@ -98,10 +98,6 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
           )}
         </div>
 
-        {/* 🛒 Add to Cart */}
-        {/* <div className="flex gap-2 pt-3">
-          <AddToCart product={product} />
-        </div> */}
       </div>
     </div>
   );
