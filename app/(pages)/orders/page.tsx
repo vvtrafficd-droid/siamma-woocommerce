@@ -19,6 +19,13 @@ export default function OrdersPage() {
   const [error, setError] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
+  const normalizeStatus = (raw: string) => {
+    let s = String(raw || "").toLowerCase();
+    if (s.startsWith("wc-")) s = s.slice(3);
+    s = s.replace(/[\s_]+/g, "-");
+    return s;
+  };
+
   const statusMap: Record<string, { label: string; bg: string; text: string; border: string }> = {
     pending: { label: "Pendente", bg: "bg-yellow-100", text: "text-yellow-800", border: "border-yellow-200" },
     processing: { label: "Em processamento", bg: "bg-blue-100", text: "text-blue-800", border: "border-blue-200" },
@@ -28,8 +35,20 @@ export default function OrdersPage() {
     refunded: { label: "Reembolsado", bg: "bg-teal-100", text: "text-teal-800", border: "border-teal-200" },
     failed: { label: "Falhado", bg: "bg-red-100", text: "text-red-800", border: "border-red-200" },
     trash: { label: "Removido", bg: "bg-neutral-100", text: "text-neutral-800", border: "border-neutral-200" },
+    "delivery-route": { label: "Rota de entrega", bg: "bg-orange-100", text: "text-orange-800", border: "border-orange-200" },
+    "rota-de-entrega": { label: "Rota de entrega", bg: "bg-orange-100", text: "text-orange-800", border: "border-orange-200" },
+    "rota-entrega": { label: "Rota de entrega", bg: "bg-orange-100", text: "text-orange-800", border: "border-orange-200" },
+    "rotaentrega": { label: "Rota de entrega", bg: "bg-orange-100", text: "text-orange-800", border: "border-orange-200" },
+    picking: { label: "Separação dos produtos", bg: "bg-indigo-100", text: "text-indigo-800", border: "border-indigo-200" },
+    "separacao": { label: "Separação dos produtos", bg: "bg-indigo-100", text: "text-indigo-800", border: "border-indigo-200" },
+    "separacao-dos-produtos": { label: "Separação dos produtos", bg: "bg-indigo-100", text: "text-indigo-800", border: "border-indigo-200" },
+    "separacao-produtos": { label: "Separação dos produtos", bg: "bg-indigo-100", text: "text-indigo-800", border: "border-indigo-200" },
   };
-  const getStatusInfo = (s: string) => statusMap[s] || { label: s, bg: "bg-gray-100", text: "text-gray-800", border: "border-gray-200" };
+
+  const getStatusInfo = (raw: string) => {
+    const key = normalizeStatus(raw);
+    return statusMap[key] || { label: raw, bg: "bg-gray-100", text: "text-gray-800", border: "border-gray-200" };
+  };
 
   const fetchOrders = async (opts?: { email?: string }) => {
     try {
@@ -125,10 +144,10 @@ export default function OrdersPage() {
                               <div className="text-sm text-gray-600">{new Date(o.date_created).toLocaleString()}</div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-full border ${s.bg} ${s.text} ${s.border}`}>{s.label}</span>
-                            <span className="text-sm text-gray-600">Itens: {itemsCount}</span>
-                            <span className="text-sm font-semibold text-gray-900">Total: {o.total}€</span>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-full border ${s.bg} ${s.text} ${s.border} whitespace-nowrap flex-shrink-0`}>{s.label}</span>
+                            <span className="text-sm text-gray-600 whitespace-nowrap flex-shrink-0">Itens: {itemsCount}</span>
+                            <span className="text-sm font-semibold text-gray-900 whitespace-nowrap flex-shrink-0">Total: {o.total}€</span>
                           </div>
                         </div>
                       );
