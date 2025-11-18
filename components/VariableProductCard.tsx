@@ -72,7 +72,7 @@ const VariableProductCard: React.FC<{ product: WooProduct }> = ({ product }) => 
         {/* Title */}
         <Link
           href={`/products/${slug}`}
-          className="text-lg font-medium text-gray-800 transition line-clamp-2 hover:text-green-600"
+          className="text-base font-medium text-gray-800 transition line-clamp-2 hover:text-green-600"
         >
           {name}
         </Link>
@@ -81,7 +81,7 @@ const VariableProductCard: React.FC<{ product: WooProduct }> = ({ product }) => 
 
         {/* 💰 Price */}
         <div className="flex items-center gap-2 mt-2">
-            <span className="text-md text-gray-900 font-medium">
+            <span className="text-sm text-gray-900 font-medium">
               From {siteConfig.currency} {minPrice}
               {maxPrice !== minPrice && ` - ${siteConfig.currency} ${maxPrice}`}
             </span>
