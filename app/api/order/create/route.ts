@@ -51,24 +51,27 @@ export async function POST(req: NextRequest) {
       items,
       total,
       shipping,
+      fulfillment,
     } = body;
 
-    const originQuery = "4835-517 Nespereira, Portugal";
-    const destQuery = `${zip} Portugal`;
-    const origin = await geocode(originQuery);
-    const dest = await geocode(destQuery);
-    if (!origin || !dest) {
-      return NextResponse.json(
-        { error: "Não foi possível localizar o código postal" },
-        { status: 400 }
-      );
-    }
-    const distanceKm = Math.round(haversineKm(origin, dest));
-    if (distanceKm > 50) {
-      return NextResponse.json(
-        { error: "Fora da zona de entrega", distanceKm },
-        { status: 400 }
-      );
+    if (fulfillment === "delivery") {
+      const originQuery = "4835-517 Nespereira, Portugal";
+      const destQuery = `${zip} Portugal`;
+      const origin = await geocode(originQuery);
+      const dest = await geocode(destQuery);
+      if (!origin || !dest) {
+        return NextResponse.json(
+          { error: "Não foi possível localizar o código postal" },
+          { status: 400 }
+        );
+      }
+      const distanceKm = Math.round(haversineKm(origin, dest));
+      if (distanceKm > 50) {
+        return NextResponse.json(
+          { error: "Fora da zona de entrega", distanceKm },
+          { status: 400 }
+        );
+      }
     }
 
     // Map cart items to WooCommerce order line_items

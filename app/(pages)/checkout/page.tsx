@@ -13,6 +13,8 @@ import Image from "next/image";
 import { siteConfig } from "@/lib/config";
 import { useRouter } from "next/navigation";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { cn } from "@/lib/utils";
+import { Truck, Store } from "lucide-react";
 import { PostalCodeAutocomplete } from "@/components/PostalCodeAutocomplete";
 import { PostalCodeInfo, isValidPostalCode } from "@/lib/postalCodes";
 
@@ -29,6 +31,7 @@ interface CheckoutFormData {
   district?: string;
   phone: string;
   paymentMethod: string;
+  fulfillment: "pickup" | "delivery";
 }
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -38,7 +41,8 @@ const CheckoutPage = () => {
   const { register, handleSubmit, reset, setValue, watch } = useForm<CheckoutFormData>({
     defaultValues: { 
       paymentMethod: "cod",
-      country: "Portugal" 
+      country: "Portugal",
+      fulfillment: "delivery"
     },
   });
   const [loading, setLoading] = useState(false);
@@ -66,6 +70,12 @@ const CheckoutPage = () => {
 
   React.useEffect(() => {
     const zip = watch("zip");
+    const mode = watch("fulfillment");
+    if (mode !== "delivery") {
+      setDistanceKm(null);
+      setDeliveryEligible(true);
+      return;
+    }
     const valid = zip && isValidPostalCode(zip);
     if (!valid) {
       setDistanceKm(null);
@@ -116,11 +126,11 @@ const CheckoutPage = () => {
   }, [watch("zip")]);
 
   const onSubmit = async (data: CheckoutFormData) => {
-    if (!isValidPostalCode(data.zip)) {
+    if (data.fulfillment === "delivery" && !isValidPostalCode(data.zip)) {
       alert("Por favor, insira um código postal válido no formato XXXX-XXX");
       return;
     }
-    if (distanceKm !== null && distanceKm > 50) {
+    if (data.fulfillment === "delivery" && distanceKm !== null && distanceKm > 50) {
       alert("Endereço fora da zona de entrega (50km de 4835-517)");
       return;
     }
@@ -212,63 +222,118 @@ const CheckoutPage = () => {
                     {...register("email", { required: true })}
                   />
                 </div>
-                       <div>
-                  <Label htmlFor="zip">Código Postal</Label>
-                  <PostalCodeAutocomplete
-                    value={watch("zip") || ""}
-                    onChange={(value) => setValue("zip", value, { shouldValidate: true })}
-                    onSelect={handlePostalCodeSelect}
-                    placeholder="XXXX-XXX"
-                  />
-                  {selectedPostalCode && (
-                    <div className="mt-1 text-xs text-green-600">
-                      📍 {selectedPostalCode.locality}, {selectedPostalCode.municipality}
+                <div className="sm:col-span-2">
+                  <Label>Forma de entrega</Label>
+                  <RadioGroup
+                    defaultValue={watch("fulfillment")}
+                    onValueChange={(v) => setValue("fulfillment", v as "pickup" | "delivery", { shouldValidate: true })}
+                    className="mt-2 grid grid-cols-2 gap-4"
+                  >
+                    <div>
+                      <RadioGroupItem value="pickup" id="pickup" className="sr-only" />
+                      <Label
+                        htmlFor="pickup"
+                        className={cn(
+                          "flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition",
+                          "text-base md:text-lg",
+                          watch("fulfillment") === "pickup"
+                            ? "border-green-600 bg-green-50 ring-2 ring-green-600"
+                            : "border-gray-200 bg-white hover:border-gray-300"
+                        )}
+                      >
+                        <Store className="w-5 h-5 text-green-600" />
+                        <div className="flex flex-col">
+                          <span className="font-semibold">Retirada</span>
+                          <span className="text-xs text-muted-foreground">Retirar em ponto físico</span>
+                        </div>
+                      </Label>
                     </div>
-                  )}
-                  {distanceKm !== null && (
-                    <div className="mt-1 text-xs">
-                      {deliveryEligible ? (
-                        <span className="text-green-600">Dentro da zona de entrega (~{distanceKm} km)</span>
-                      ) : (
-                        <span className="text-red-600">Fora da zona de entrega (&gt;50 km, ~{distanceKm} km)</span>
+                    <div>
+                      <RadioGroupItem value="delivery" id="delivery" className="sr-only" />
+                      <Label
+                        htmlFor="delivery"
+                        className={cn(
+                          "flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition",
+                          "text-base md:text-lg",
+                          watch("fulfillment") === "delivery"
+                            ? "border-green-600 bg-green-50 ring-2 ring-green-600"
+                            : "border-gray-200 bg-white hover:border-gray-300"
+                        )}
+                      >
+                        <Truck className="w-5 h-5 text-green-600" />
+                        <div className="flex flex-col">
+                          <span className="font-semibold">Entrega</span>
+                          <span className="text-xs text-muted-foreground">Entrega no endereço</span>
+                        </div>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                {watch("fulfillment") === "delivery" && (
+                  <>
+                    <div>
+                      <Label htmlFor="zip">Código Postal</Label>
+                      <PostalCodeAutocomplete
+                        value={watch("zip") || ""}
+                        onChange={(value) => setValue("zip", value, { shouldValidate: true })}
+                        onSelect={handlePostalCodeSelect}
+                        placeholder="XXXX-XXX"
+                      />
+                      {selectedPostalCode && (
+                        <div className="mt-1 text-xs text-green-600">
+                          📍 {selectedPostalCode.locality}, {selectedPostalCode.municipality}
+                        </div>
+                      )}
+                      {distanceKm !== null && (
+                        <div className="mt-1 text-xs">
+                          {deliveryEligible ? (
+                            <span className="text-green-600">Dentro da zona de entrega (~{distanceKm} km)</span>
+                          ) : (
+                            <span className="text-red-600">Fora da zona de entrega (&gt;50 km, ~{distanceKm} km)</span>
+                          )}
+                        </div>
+                      )}
+                      {watch("zip") && !isValidPostalCode(watch("zip")) && (
+                        <div className="mt-1 text-xs text-red-600">
+                          Formato inválido. Use XXXX-XXX
+                        </div>
                       )}
                     </div>
-                  )}
-                  {watch("zip") && !isValidPostalCode(watch("zip")) && (
-                    <div className="mt-1 text-xs text-red-600">
-                      Formato inválido. Use XXXX-XXX
+
+                    <div className="sm:col-span-2">
+                      <Label htmlFor="address">Morada</Label>
+                      <Input
+                        id="address"
+                        placeholder="N.º, Rua, Localidade"
+                        {...register("address", { required: watch("fulfillment") === "delivery" })}
+                      />
                     </div>
-                  )}
-                </div>
-                <div className="sm:col-span-2">
-                  <Label htmlFor="address">Morada</Label>
-                  <Input
-                    id="address"
-                    placeholder="N.º, Rua, Localidade"
-                    {...register("address", { required: true })}
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <Label htmlFor="addressComplement">Complemento do endereço (opcional)</Label>
-                  <Input
-                    id="addressComplement"
-                    placeholder="Andar, apartamento, etc."
-                    {...register("addressComplement")}
-                  />
-                </div>
-         
-                <div>
-                  <Label htmlFor="city">Cidade</Label>
-                  <Input id="city" readOnly placeholder="Selecionado pelo código postal" {...register("city")} />
-                </div>
-                <div>
-                  <Label htmlFor="municipality">Concelho</Label>
-                  <Input id="municipality" readOnly placeholder="Selecionado pelo código postal" {...register("municipality")} />
-                </div>
-                <div>
-                  <Label htmlFor="district">Distrito</Label>
-                  <Input id="district" readOnly placeholder="Selecionado pelo código postal" {...register("district")} />
-                </div>
+
+                    <div className="sm:col-span-2">
+                      <Label htmlFor="addressComplement">Complemento do endereço (opcional)</Label>
+                      <Input
+                        id="addressComplement"
+                        placeholder="Andar, apartamento, etc."
+                        {...register("addressComplement")}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="city">Cidade</Label>
+                      <Input id="city" readOnly placeholder="Selecionado pelo código postal" {...register("city")} />
+                    </div>
+                    <div>
+                      <Label htmlFor="municipality">Concelho</Label>
+                      <Input id="municipality" readOnly placeholder="Selecionado pelo código postal" {...register("municipality")} />
+                    </div>
+                    <div>
+                      <Label htmlFor="district">Distrito</Label>
+                      <Input id="district" readOnly placeholder="Selecionado pelo código postal" {...register("district")} />
+                    </div>
+                  </>
+                )}
+                
                 <input
                   type="hidden"
                   {...register("country")}
@@ -378,8 +443,8 @@ const CheckoutPage = () => {
                 disabled={
                   loading ||
                   orderItems.length === 0 ||
-                  (distanceKm !== null && distanceKm > 50) ||
-                  (watch("zip") && !isValidPostalCode(watch("zip")))
+                  (watch("fulfillment") === "delivery" && distanceKm !== null && distanceKm > 50) ||
+                  (watch("fulfillment") === "delivery" && watch("zip") && !isValidPostalCode(watch("zip")))
                 }
               >
                 {loading ? "A processar encomenda..." : "Finalizar encomenda"}
