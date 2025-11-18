@@ -11,11 +11,27 @@ export async function GET(req: NextRequest) {
       per_page: 10,
       orderby: "date",
       order: "desc",
+      status: "any",
     };
 
-    if (customerId) params.customer = customerId;
-    else if (email) params.search = email;
-    else {
+    if (customerId) {
+      params.customer = customerId;
+    } else if (email) {
+      try {
+        const resp = await wcApi.get("customers", { search: email });
+        const list = resp.data as any[];
+        const match = Array.isArray(list)
+          ? list.find((c: any) => c?.email?.toLowerCase() === String(email).toLowerCase())
+          : null;
+        if (match?.id) {
+          params.customer = match.id;
+        } else {
+          return NextResponse.json({ orders: [] }, { status: 200 });
+        }
+      } catch (e) {
+        return NextResponse.json({ orders: [] }, { status: 200 });
+      }
+    } else {
       return NextResponse.json({ error: "Informe customerId ou email" }, { status: 400 });
     }
 

@@ -9,13 +9,27 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { useAuthStore } from "@/store/authStore";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+const apiBase = baseUrl || "";
 
 export default function OrdersPage() {
   const { email: storedEmail, customerId } = useAuthStore();
-  const [email, setEmail] = useState(storedEmail || "");
+  const [email, setEmail] = useState(storedEmail || "mariacliente@gmail.com");
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hydrated, setHydrated] = useState(false);
+
+  const statusMap: Record<string, { label: string; bg: string; text: string; border: string }> = {
+    pending: { label: "Pendente", bg: "bg-yellow-100", text: "text-yellow-800", border: "border-yellow-200" },
+    processing: { label: "Em processamento", bg: "bg-blue-100", text: "text-blue-800", border: "border-blue-200" },
+    "on-hold": { label: "Em espera", bg: "bg-amber-100", text: "text-amber-800", border: "border-amber-200" },
+    completed: { label: "Concluído", bg: "bg-green-100", text: "text-green-800", border: "border-green-200" },
+    cancelled: { label: "Cancelado", bg: "bg-gray-100", text: "text-gray-800", border: "border-gray-200" },
+    refunded: { label: "Reembolsado", bg: "bg-teal-100", text: "text-teal-800", border: "border-teal-200" },
+    failed: { label: "Falhado", bg: "bg-red-100", text: "text-red-800", border: "border-red-200" },
+    trash: { label: "Removido", bg: "bg-neutral-100", text: "text-neutral-800", border: "border-neutral-200" },
+  };
+  const getStatusInfo = (s: string) => statusMap[s] || { label: s, bg: "bg-gray-100", text: "text-gray-800", border: "border-gray-200" };
 
   const fetchOrders = async (opts?: { email?: string }) => {
     try {
@@ -30,7 +44,7 @@ export default function OrdersPage() {
         setOrders([]);
         return;
       }
-      const res = await fetch(`${baseUrl}/api/orders?${qs}`);
+      const res = await fetch(`${apiBase}/api/orders?${qs}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Falha a carregar pedidos");
       setOrders(Array.isArray(data.orders) ? data.orders : []);
@@ -42,9 +56,16 @@ export default function OrdersPage() {
   };
 
   useEffect(() => {
-    fetchOrders();
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (customerId || storedEmail) {
+      fetchOrders();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customerId]);
+  }, [hydrated, customerId, storedEmail]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +89,10 @@ export default function OrdersPage() {
                 <form onSubmit={handleSearch} className="space-y-4">
                   <div>
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="joao@email.com" />
+                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="joao@email.com" disabled={!!storedEmail} />
+                    {storedEmail && (
+                      <p className="text-xs text-gray-500 mt-1">Usando o email da sessão.</p>
+                    )}
                   </div>
                   <Button type="submit" className="w-full bg-green-600 text-white py-6 text-lg" disabled={loading}>
                     {loading ? "A carregar..." : "Ver pedidos"}
@@ -89,19 +113,26 @@ export default function OrdersPage() {
                 )}
                 {!loading && orders.length > 0 && (
                   <div className="space-y-3">
-                    {orders.map((o) => (
-                      <div key={o.id} className="flex justify-between items-center p-4 border border-gray-200 rounded-md bg-white">
-                        <div>
-                          <div className="font-semibold">Pedido #{o.id}</div>
-                          <div className="text-sm text-gray-600">{new Date(o.date_created).toLocaleString()}</div>
-                          <div className="text-sm text-gray-600">Estado: {o.status}</div>
+                    {orders.map((o) => {
+                      const s = getStatusInfo(String(o.status || ""));
+                      const itemsCount = Array.isArray(o.line_items) ? o.line_items.reduce((s: number, i: any) => s + i.quantity, 0) : 0;
+                      return (
+                        <div key={o.id} className="p-4 border rounded-xl bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-700">#{o.id}</div>
+                            <div>
+                              <div className="font-semibold text-gray-900">Pedido #{o.id}</div>
+                              <div className="text-sm text-gray-600">{new Date(o.date_created).toLocaleString()}</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-full border ${s.bg} ${s.text} ${s.border}`}>{s.label}</span>
+                            <span className="text-sm text-gray-600">Itens: {itemsCount}</span>
+                            <span className="text-sm font-semibold text-gray-900">Total: {o.total}€</span>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <div className="font-semibold">Total: {o.total}€</div>
-                          <div className="text-sm text-gray-600">Itens: {Array.isArray(o.line_items) ? o.line_items.reduce((s: number, i: any) => s + i.quantity, 0) : 0}</div>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
