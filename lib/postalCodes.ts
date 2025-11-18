@@ -56,6 +56,7 @@ export const portuguesePostalCodes: PostalCodeInfo[] = [
   { code: "4800-001", locality: "Guimarães", municipality: "Guimarães", district: "Braga" },
   { code: "4810-001", locality: "Guimarães", municipality: "Guimarães", district: "Braga" },
   { code: "4835-001", locality: "Vizela", municipality: "Vizela", district: "Braga" },
+  { code: "4835-517", locality: "Nespereira", municipality: "Guimarães", district: "Braga" },
   { code: "4850-001", locality: "Póvoa de Lanhoso", municipality: "Póvoa de Lanhoso", district: "Braga" },
   { code: "4900-001", locality: "Viana do Castelo", municipality: "Viana do Castelo", district: "Viana do Castelo" },
   { code: "4935-001", locality: "Caminha", municipality: "Caminha", district: "Viana do Castelo" },

@@ -44,6 +44,8 @@ const CheckoutPage = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [selectedPostalCode, setSelectedPostalCode] = useState<PostalCodeInfo | null>(null);
+  const [distanceKm, setDistanceKm] = useState<number | null>(null);
+  const [deliveryEligible, setDeliveryEligible] = useState<boolean>(true);
 
   const { items, clearCart } = useCartStore();
   const orderItems = items;
@@ -62,9 +64,64 @@ const CheckoutPage = () => {
     setValue("district", postalCode.district, { shouldValidate: true });
   };
 
+  React.useEffect(() => {
+    const zip = watch("zip");
+    const valid = zip && isValidPostalCode(zip);
+    if (!valid) {
+      setDistanceKm(null);
+      setDeliveryEligible(true);
+      return;
+    }
+    const controller = new AbortController();
+    const check = async () => {
+      try {
+        const originQ = "4835-517 Nespereira, Portugal";
+        const destQ = `${zip} Portugal`;
+        const g = async (q: string) => {
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}`, { signal: controller.signal });
+          if (!res.ok) return null;
+          const data = await res.json();
+          if (!Array.isArray(data) || data.length === 0) return null;
+          const lat = parseFloat(data[0].lat);
+          const lon = parseFloat(data[0].lon);
+          if (Number.isNaN(lat) || Number.isNaN(lon)) return null;
+          return { lat, lon };
+        };
+        const a = await g(originQ);
+        const b = await g(destQ);
+        if (!a || !b) {
+          setDistanceKm(null);
+          setDeliveryEligible(false);
+          return;
+        }
+        const toRad = (v: number) => (v * Math.PI) / 180;
+        const R = 6371;
+        const dLat = toRad(b.lat - a.lat);
+        const dLon = toRad(b.lon - a.lon);
+        const lat1 = toRad(a.lat);
+        const lat2 = toRad(b.lat);
+        const sinDLat = Math.sin(dLat / 2);
+        const sinDLon = Math.sin(dLon / 2);
+        const c = 2 * Math.asin(Math.sqrt(sinDLat * sinDLat + Math.cos(lat1) * Math.cos(lat2) * sinDLon * sinDLon));
+        const km = R * c;
+        const rounded = Math.round(km);
+        setDistanceKm(rounded);
+        setDeliveryEligible(rounded <= 50);
+      } catch {
+        setDeliveryEligible(true);
+      }
+    };
+    check();
+    return () => controller.abort();
+  }, [watch("zip")]);
+
   const onSubmit = async (data: CheckoutFormData) => {
     if (!isValidPostalCode(data.zip)) {
       alert("Por favor, insira um código postal válido no formato XXXX-XXX");
+      return;
+    }
+    if (distanceKm !== null && distanceKm > 50) {
+      alert("Endereço fora da zona de entrega (50km de 4835-517)");
       return;
     }
     
@@ -155,6 +212,34 @@ const CheckoutPage = () => {
                     {...register("email", { required: true })}
                   />
                 </div>
+                       <div>
+                  <Label htmlFor="zip">Código Postal</Label>
+                  <PostalCodeAutocomplete
+                    value={watch("zip") || ""}
+                    onChange={(value) => setValue("zip", value, { shouldValidate: true })}
+                    onSelect={handlePostalCodeSelect}
+                    placeholder="XXXX-XXX"
+                  />
+                  {selectedPostalCode && (
+                    <div className="mt-1 text-xs text-green-600">
+                      📍 {selectedPostalCode.locality}, {selectedPostalCode.municipality}
+                    </div>
+                  )}
+                  {distanceKm !== null && (
+                    <div className="mt-1 text-xs">
+                      {deliveryEligible ? (
+                        <span className="text-green-600">Dentro da zona de entrega (~{distanceKm} km)</span>
+                      ) : (
+                        <span className="text-red-600">Fora da zona de entrega (&gt;50 km, ~{distanceKm} km)</span>
+                      )}
+                    </div>
+                  )}
+                  {watch("zip") && !isValidPostalCode(watch("zip")) && (
+                    <div className="mt-1 text-xs text-red-600">
+                      Formato inválido. Use XXXX-XXX
+                    </div>
+                  )}
+                </div>
                 <div className="sm:col-span-2">
                   <Label htmlFor="address">Morada</Label>
                   <Input
@@ -171,25 +256,7 @@ const CheckoutPage = () => {
                     {...register("addressComplement")}
                   />
                 </div>
-                <div>
-                  <Label htmlFor="zip">Código Postal</Label>
-                  <PostalCodeAutocomplete
-                    value={watch("zip") || ""}
-                    onChange={(value) => setValue("zip", value, { shouldValidate: true })}
-                    onSelect={handlePostalCodeSelect}
-                    placeholder="XXXX-XXX"
-                  />
-                  {selectedPostalCode && (
-                    <div className="mt-1 text-xs text-green-600">
-                      📍 {selectedPostalCode.locality}, {selectedPostalCode.municipality}
-                    </div>
-                  )}
-                  {watch("zip") && !isValidPostalCode(watch("zip")) && (
-                    <div className="mt-1 text-xs text-red-600">
-                      Formato inválido. Use XXXX-XXX
-                    </div>
-                  )}
-                </div>
+         
                 <div>
                   <Label htmlFor="city">Cidade</Label>
                   <Input id="city" readOnly placeholder="Selecionado pelo código postal" {...register("city")} />
@@ -308,7 +375,12 @@ const CheckoutPage = () => {
               <Button
                 type="submit"
                 className="w-full cursor-pointer mt-6 bg-green-600 text-white py-6 text-lg hover:bg-green-500"
-                disabled={loading || orderItems.length === 0}
+                disabled={
+                  loading ||
+                  orderItems.length === 0 ||
+                  (distanceKm !== null && distanceKm > 50) ||
+                  (watch("zip") && !isValidPostalCode(watch("zip")))
+                }
               >
                 {loading ? "A processar encomenda..." : "Finalizar encomenda"}
               </Button>
