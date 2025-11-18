@@ -77,7 +77,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
               onClick={() => updateParams({ page: num as number })}
               className={
                 page === num
-                  ? "bg-blue-600 text-white cursor-pointer"
+                  ? "bg-green-600 text-white cursor-pointer"
                   : "bg-gray-100 cursor-pointer"
               }
             >

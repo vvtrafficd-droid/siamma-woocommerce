@@ -142,7 +142,7 @@ export default function CartSlider() {
                         <SheetClose asChild>
                             <Button
                                 onClick={() => router.push("/checkout")}
-                                className="w-full bg-blue-600 text-white rounded-none py-6 cursor-pointer hover:bg-green-500"
+                                className="w-full bg-green-600 text-white rounded-none py-6 cursor-pointer hover:bg-green-500"
                             >
                                 Encomendar
                             </Button>

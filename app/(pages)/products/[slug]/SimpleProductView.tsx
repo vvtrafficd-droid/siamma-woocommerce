@@ -106,7 +106,7 @@ const SimpleProductView = async ({product}:{product:WooProduct}) => {
           )}
 
           <div>
-            {product?.stock_status === "instock" ? <span className="text-blue-500"><i className="ri-checkbox-circle-line"></i> Em stock</span> : <span className="text-red-500"><i className="ri-close-circle-line"></i> Sem stock</span>}
+            {product?.stock_status === "instock" ? <span className="text-green-500"><i className="ri-checkbox-circle-line"></i> Em stock</span> : <span className="text-red-500"><i className="ri-close-circle-line"></i> Sem stock</span>}
           </div>
 
         </div>

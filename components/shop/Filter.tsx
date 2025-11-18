@@ -64,7 +64,7 @@ const FilterShop = () => {
                                 className={cn(
                                     "w-full text-left px-3 py-2 rounded-md transition flex justify-between items-center",
                                     selectedCategory === cat.id
-                                        ? "text-blue-600 font-medium"
+                                        ? "text-green-600 font-medium"
                                         : "hover:bg-gray-100 text-gray-700"
                                 )}
                             >
@@ -72,7 +72,7 @@ const FilterShop = () => {
                                 {cat.count != null && <p className={cn(
                                     "w-5 h-5 text-center text-xs flex items-center justify-center rounded-full transition",
                                     selectedCategory === cat.id
-                                        ? "bg-blue-600 text-white"
+                                        ? "bg-green-600 text-white"
                                         : "hover:bg-gray-100 text-gray-700"
                                 )}>{cat.count}</p>}
                             </button>

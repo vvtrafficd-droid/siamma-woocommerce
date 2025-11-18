@@ -52,13 +52,13 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
             });
             toast.success("Produto adicionado ao carrinho!");
           }}
-          className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-green-700 flex items-center justify-center shadow-md"
+          className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-green-600 text-white hover:bg-green-700 flex items-center justify-center shadow-md"
           aria-label="Adicionar ao carrinho"
         >
           <i className="ri-add-line text-lg"></i>
         </button>
         {on_sale && (
-          <span className="absolute top-3 right-3 bg-blue-500 text-white text-sm font-medium px-3 py-1 rounded-full">
+          <span className="absolute top-3 right-3 bg-green-500 text-white text-sm font-medium px-3 py-1 rounded-full">
             Sale
           </span>
         )}

@@ -16,7 +16,7 @@ export function Breadcrumb({ links }: Props) {
                     {links.map((link, index) => {
                         return link.href === '#' ? (
                             <li key={index}>
-                                <span className="text-base text-blue-400">{link.title}</span>
+                                <span className="text-base text-green-400">{link.title}</span>
                             </li>
                         ) : (
                             <li key={index} className="inline-flex items-center gap-x-1">

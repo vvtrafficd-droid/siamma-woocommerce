@@ -257,7 +257,7 @@ const CheckoutPage = () => {
 
               <Button
                 type="submit"
-                className="w-full cursor-pointer mt-6 bg-blue-600 text-white py-6 text-lg hover:bg-green-500"
+                className="w-full cursor-pointer mt-6 bg-green-600 text-white py-6 text-lg hover:bg-green-500"
                 disabled={loading || orderItems.length === 0}
               >
                 {loading ? "A processar encomenda..." : "Finalizar encomenda"}

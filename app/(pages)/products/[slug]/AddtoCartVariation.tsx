@@ -27,7 +27,7 @@ const AddToCartVariation = ({product,variation}:{product:any,variation:any}) => 
   return (
     <button
       onClick={handleAdd}
-      className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer"
+      className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition cursor-pointer"
     >
     <i className="ri-shopping-cart-line mr-2"></i> Adicionar ao carrinho
     </button>

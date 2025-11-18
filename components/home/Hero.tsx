@@ -64,7 +64,7 @@ const Hero = () => {
                                 <div className="w-full flex flex-col-reverse md:flex-row items-center justify-between pb-12 md:pb-0">
                                     <div className="w-full md:w-1/2 md:space-y-4 px-6">
                                         <div className="flex gap-2 items-center">
-                                            <p className="text-3xl md:text-5xl font-bold text-blue-700">
+                                            <p className="text-3xl md:text-5xl font-bold text-green-700">
                                                 {slide.discount}
                                             </p>
                                             <p className="text-lg md:text-xl uppercase leading-tight">

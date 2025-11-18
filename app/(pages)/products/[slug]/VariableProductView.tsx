@@ -152,7 +152,7 @@ const VariableProductView = ({ product }: { product: WooProduct }) => {
           )}
 
           <div>
-            {selectedVariation?.stock_status === "instock" ? <span className="text-blue-500"><i className="ri-checkbox-circle-line"></i> Em stock</span> : <span className="text-red-500"><i className="ri-close-circle-line"></i> Sem stock</span>}
+            {selectedVariation?.stock_status === "instock" ? <span className="text-green-500"><i className="ri-checkbox-circle-line"></i> Em stock</span> : <span className="text-red-500"><i className="ri-close-circle-line"></i> Sem stock</span>}
           </div>
 
         </div>
@@ -215,7 +215,7 @@ const VariableProductView = ({ product }: { product: WooProduct }) => {
                         <label
                           key={opt}
                           className={`cursor-pointer border rounded-lg px-4 py-2 text-sm font-medium transition-all ${isSelected
-                            ? "border-blue-600 bg-blue-200 text-blue-800"
+                            ? "border-green-600 bg-green-200 text-green-800"
                             : "border-gray-300 hover:border-green-400"
                           }`}
                         >
