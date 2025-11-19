@@ -19,7 +19,7 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
     images,
   } = product;
 
-  const imageUrl = images?.[0]?.src || "/no-image.png";
+  const imageUrl = images?.[0]?.src || "/no-image.svg";
 
   return (
     <div className="group overflow-hidden transition-all duration-300 bg-white border border-gray-200 rounded-md">

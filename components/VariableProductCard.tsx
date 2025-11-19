@@ -19,7 +19,7 @@ const VariableProductCard: React.FC<{ product: WooProduct }> = ({ product }) => 
   } = product;
 
   const isVariable = type === "variable";
-  const imageUrl = images?.[0]?.src || "/no-image.png";
+  const imageUrl = images?.[0]?.src || "/no-image.svg";
 
   // 🧮 Calculate price range for variable products
   const prices =
