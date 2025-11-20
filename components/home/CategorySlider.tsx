@@ -17,9 +17,9 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ categories }) => {
   const swiperRef = useRef<any>(null);
 
   return (
-    <section className="container mx-auto px-6 py-6 md:py-8 border-b border-gray-200">
+    <section className="container mx-auto px-6 py-2 md:py-8 border-b border-gray-200">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-2">
         <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">Os nossos catálogos</h2>
 
         <div className="flex gap-2">

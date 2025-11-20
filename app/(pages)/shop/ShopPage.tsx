@@ -122,7 +122,7 @@ export default function ShopPage() {
                           ]
                 } />
             <CategorySlider categories={categories} />
-            <div className="container mx-auto px-4 pb-10 mt-4">
+            <div className="container mx-auto px-4 pb-10 mt-2">
 
                 <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-6 gap-8">
                     <FilterShop />
@@ -130,7 +130,7 @@ export default function ShopPage() {
                     {/* Main Content */}
                     <main className="md:col-span-4 lg:col-span-5 space-y-4">
                         {/* Top Bar */}
-                        <div className="bg-white shadow-xs border border-gray-200 rounded-md px-2 md:px-4 py-3 flex flex-row justify-between items-center gap-2">
+                        {/* <div className="bg-white shadow-xs border border-gray-200 rounded-md px-2 md:px-4 py-3 flex flex-row justify-between items-center gap-2">
                             <MobileFilterMenu />
                      
 
@@ -149,7 +149,7 @@ export default function ShopPage() {
                                     ))}
                                 </SelectContent>
                             </Select>
-                        </div>
+                        </div> */}
 
                         {/* Products Grid */}
                         {loading ? (
