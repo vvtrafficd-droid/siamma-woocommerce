@@ -57,25 +57,21 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
         >
           <i className="ri-add-line text-lg"></i>
         </button>
-        {on_sale && (
-          <span className="absolute top-3 right-3 bg-green-500 text-white text-sm font-medium px-3 py-1 rounded-full">
-            Sale
-          </span>
-        )}
+
       </Link>
 
       <div className="mt-2 px-3 pb-4">
         <div className="text-xs text-gray-400">
           {categories?.map((cat) => (
-            <span key={cat.id} className="mr-2 capitalize">
-              {cat.name}
+            <span key={cat.id} className="mr-2 capitalize text-md">
+              {cat?.name}
             </span>
           ))}
         </div>
 
         <Link
           href={`/products/${slug}`}
-          className="text-base font-medium text-gray-800 transition line-clamp-2 hover:text-green-600"
+          className="text-sm font-medium text-gray-600 transition line-clamp-2 hover:text-green-600"
         >
           {name}
         </Link>
@@ -84,15 +80,15 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
         <div className="flex items-center gap-2 mt-2">
           {on_sale ? (
             <>
-              <span className="text-sm font-bold text-gray-900">
+              <span className="text-md font-bold text-gray-900">
                 {siteConfig.currency} {sale_price}
               </span>
-              <span className="text-sm line-through text-gray-400">
+              <span className="text-md line-through text-gray-400">
                 {siteConfig.currency} {regular_price}
               </span>
             </>
           ) : (
-            <span className="text-sm text-gray-900 font-medium">
+            <span className="text-md text-gray-900 font-medium">
               {siteConfig.currency} {regular_price || price || "—"}
             </span>
           )}
