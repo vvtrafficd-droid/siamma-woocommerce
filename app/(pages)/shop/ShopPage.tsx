@@ -70,7 +70,7 @@ export default function ShopPage() {
                 orderby: sortBy.includes("price") ? "price" : "date",
                 order: sortBy.endsWith("desc") ? "desc" : "asc",
                 page: page.toString(),
-                per_page: "60",
+                per_page: "12",
             });
 
             if (search.trim()) params.set("search", search.trim());
