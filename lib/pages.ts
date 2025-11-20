@@ -21,4 +21,8 @@ export const pages = {
     title: "FAQs",
     description: `Find quick answers to common questions about orders, shipping, and returns at ${siteConfig.title}.`,
   },
+  cookies: {
+    title: "Política de Cookies",
+    description: `Saiba como ${siteConfig.title} utiliza cookies e tecnologias similares e gerencie suas preferências.`,
+  },
 };

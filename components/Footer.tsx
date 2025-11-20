@@ -34,9 +34,19 @@ const Footer = () => {
         <div>
           <h3 className="text-gray-900 text-lg font-semibold mb-4">Siamma</h3>
           <ul className="space-y-2 text-sm">
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">Sobre a Siamma</Link></li>
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">Política de Privacidade</Link></li>
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">Termos e Condições</Link></li>
+            <li><Link href="/about" className="hover:text-gray-900 hover:underline">Sobre a Siamma</Link></li>
+            <li><Link href="/privacy" className="hover:text-gray-900 hover:underline">Política de Privacidade</Link></li>
+            <li><Link href="/terms" className="hover:text-gray-900 hover:underline">Termos e Condições</Link></li>
+            <li><Link href="/cookies" className="hover:text-gray-900 hover:underline">Política de Cookies</Link></li>
+            <li>
+              <button
+                type="button"
+                className="hover:text-gray-900 hover:underline"
+                onClick={() => document.dispatchEvent(new Event("open-cookie-preferences"))}
+              >
+                Preferências de Cookies
+              </button>
+            </li>
 
           </ul>
         </div>

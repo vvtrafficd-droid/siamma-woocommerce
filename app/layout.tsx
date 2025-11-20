@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import TopLoader from "@/components/TopLoader";
 import { siteConfig } from "@/lib/config";
 import { Toaster } from 'react-hot-toast';
+import CookieConsent from "@/components/CookieConsent";
 
 
 const dmSans = DM_Sans({
@@ -34,6 +35,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <CookieConsent />
         <Toaster position="top-center"
           toastOptions={{
             success:{

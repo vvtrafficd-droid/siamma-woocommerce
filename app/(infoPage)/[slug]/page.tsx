@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { siteConfig } from "@/lib/config";
 import { pages } from "@/lib/pages"; // adjust import path if needed
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { policyContent } from "@/lib/policyContent";
 
 // ✅ Generate metadata dynamically
 export async function generateMetadata(
@@ -53,9 +54,9 @@ const InfoPage = async ({
         );
     }
 
+    const content = policyContent[slug];
     return (
         <>
-
             <Breadcrumb
                 links={[
                     { title: 'Home', href: '/' },
@@ -63,10 +64,10 @@ const InfoPage = async ({
                 ]} />
             <div className="max-w-3xl mx-auto py-16 min-h-[70vh]">
                 <h1 className="text-4xl font-semibold mb-6">{page.title}</h1>
-                <p className="text-gray-700 leading-relaxed text-lg">{page.description}</p>
+                <p className="text-gray-700 leading-relaxed text-lg mb-8">{page.description}</p>
+                {content}
             </div>
         </>
-
     );
 };
 
