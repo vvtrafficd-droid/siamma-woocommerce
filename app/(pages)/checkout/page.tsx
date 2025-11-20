@@ -39,7 +39,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 const CheckoutPage = () => {
   const router = useRouter();
-  const { register, handleSubmit, reset, setValue, watch } = useForm<CheckoutFormData>({
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<CheckoutFormData>({
     defaultValues: { 
       paymentMethod: "cod",
       country: "Portugal",
@@ -243,16 +243,24 @@ const CheckoutPage = () => {
                   <Input
                     id="firstName"
                     placeholder="João"
-                    {...register("firstName", { required: true })}
+                    className={cn(errors.firstName && "border-red-500")}
+                    {...register("firstName", { required: "Primeiro nome é obrigatório" })}
                   />
+                  {errors.firstName && (
+                    <div className="mt-1 text-xs text-red-600">{String(errors.firstName.message)}</div>
+                  )}
                 </div>
                 <div>
                   <Label htmlFor="lastName">Apelido</Label>
                   <Input
                     id="lastName"
                     placeholder="Silva"
-                    {...register("lastName", { required: true })}
+                    className={cn(errors.lastName && "border-red-500")}
+                    {...register("lastName", { required: "Apelido é obrigatório" })}
                   />
+                  {errors.lastName && (
+                    <div className="mt-1 text-xs text-red-600">{String(errors.lastName.message)}</div>
+                  )}
                 </div>
                 <div className="sm:col-span-2">
                   <Label htmlFor="email">Endereço de email</Label>
@@ -260,10 +268,17 @@ const CheckoutPage = () => {
                     id="email"
                     type="email"
                     placeholder="joao@exemplo.com"
-                    {...register("email", { required: true })}
+                    className={cn(errors.email && "border-red-500")}
+                    {...register("email", {
+                      required: "Email é obrigatório",
+                      pattern: { value: /.+@.+\..+/, message: "Email inválido" },
+                    })}
                   />
                   {customerPrefilled && (
                     <div className="mt-1 text-xs text-green-600">Dados do cliente carregados</div>
+                  )}
+                  {errors.email && (
+                    <div className="mt-1 text-xs text-red-600">{String(errors.email.message)}</div>
                   )}
                 </div>
                 <div className="sm:col-span-2">
@@ -324,6 +339,9 @@ const CheckoutPage = () => {
                         onSelect={handlePostalCodeSelect}
                         placeholder="XXXX-XXX"
                       />
+                      <input type="hidden" {...register("zip", {
+                        required: watch("fulfillment") === "delivery" ? "Código postal é obrigatório" : false,
+                      })} />
                       {selectedPostalCode && (
                         <div className="mt-1 text-xs text-green-600">
                           📍 {selectedPostalCode.locality}, {selectedPostalCode.municipality}
@@ -338,6 +356,9 @@ const CheckoutPage = () => {
                           )}
                         </div>
                       )}
+                      {watch("fulfillment") === "delivery" && !watch("zip") && errors.zip && (
+                        <div className="mt-1 text-xs text-red-600">{String(errors.zip.message)}</div>
+                      )}
                       {watch("zip") && !isValidPostalCode(watch("zip")) && (
                         <div className="mt-1 text-xs text-red-600">
                           Formato inválido. Use XXXX-XXX
@@ -350,8 +371,12 @@ const CheckoutPage = () => {
                       <Input
                         id="address"
                         placeholder="N.º, Rua, Localidade"
-                        {...register("address", { required: watch("fulfillment") === "delivery" })}
+                        className={cn(errors.address && watch("fulfillment") === "delivery" && "border-red-500")}
+                        {...register("address", { required: watch("fulfillment") === "delivery" ? "Morada é obrigatória para entrega" : false })}
                       />
+                      {watch("fulfillment") === "delivery" && errors.address && (
+                        <div className="mt-1 text-xs text-red-600">{String(errors.address.message)}</div>
+                      )}
                     </div>
 
                     <div className="sm:col-span-2">
@@ -390,6 +415,10 @@ const CheckoutPage = () => {
                     value={watch("phone") || ""}
                     onChange={(v) => setValue("phone", v, { shouldValidate: true })}
                   />
+                  <input type="hidden" {...register("phone", { required: "Telemóvel é obrigatório" })} />
+                  {errors.phone && (
+                    <div className="mt-1 text-xs text-red-600">{String(errors.phone.message)}</div>
+                  )}
                 </div>
               </CardContent>
             </Card>
