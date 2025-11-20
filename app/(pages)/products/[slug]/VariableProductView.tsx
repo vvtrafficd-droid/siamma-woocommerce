@@ -11,7 +11,7 @@ import { set } from "nprogress";
 import { Button } from "@/components/ui/button";
 
 const VariableProductView = ({ product }: { product: WooProduct }) => {
-  const mainImage = product.images?.[0]?.src || "/placeholder.png";
+  const mainImage = product.images?.[0]?.src || "/no-image.svg";
   const gallery = product.images?.slice(1) || [];
   const description = product.short_description?.replace(/<[^>]*>?/gm, "") || "";
   console.log(product);
@@ -90,18 +90,25 @@ const VariableProductView = ({ product }: { product: WooProduct }) => {
 
   const rating = parseFloat(product.average_rating || "0");
 
+  const [mainSrc, setMainSrc] = useState<string>(selectedVariation?.image?.src || mainImage);
+
+  useEffect(() => {
+    setMainSrc(selectedVariation?.image?.src || mainImage);
+  }, [selectedVariation, mainImage]);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
       {/* ✅ Product Image Gallery */}
       <div className="space-y-4">
         <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-gray-100">
           <Image
-            src={selectedVariation?.image?.src || mainImage}
+            src={mainSrc}
             alt={product.name}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
             priority
+            onError={() => setMainSrc("/no-image.svg")}
           />
         </div>
 
@@ -114,7 +121,7 @@ const VariableProductView = ({ product }: { product: WooProduct }) => {
                 className="relative aspect-square rounded-lg overflow-hidden bg-gray-100"
               >
                 <Image
-                  src={img.src}
+                  src={img.src || "/no-image.svg"}
                   alt={img.alt || product.name}
                   fill
                   className="object-cover hover:scale-105 transition-transform duration-300"

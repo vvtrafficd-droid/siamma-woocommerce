@@ -1,5 +1,6 @@
+"use client";
 import Image from "next/image";
-import React from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import AddToCart from "./AddtoCart";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -40,10 +41,20 @@ interface WooProduct {
 }
 
 // ✅ Component
-const SimpleProductView = async ({product}:{product:WooProduct}) => {
+const SimpleProductView = ({product}:{product:WooProduct}) => {
 
 
   const rating = parseFloat(product.average_rating || "0");
+  const initialMain = product.images?.[0]?.src || "/no-image.svg";
+  const [mainSrc, setMainSrc] = useState<string>(initialMain);
+
+  useEffect(() => {
+    setMainSrc(product.images?.[0]?.src || "/no-image.svg");
+  }, [product.images]);
+
+  const hasSale = Boolean(product.on_sale && product.sale_price && product.sale_price.trim() !== "");
+  const regular = (product.regular_price || "").trim();
+  const basePrice = (product.price || "").trim();
   return (
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -51,11 +62,13 @@ const SimpleProductView = async ({product}:{product:WooProduct}) => {
         <div className="space-y-4">
           <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-gray-100">
             <Image
-              src={product.images?.[0]?.src || "/placeholder.png"}
+              src={mainSrc}
               alt={product.images?.[0]?.alt || product.name}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
+              onError={() => setMainSrc("/no-image.svg")}
+              priority
             />
           </div>
 
@@ -68,8 +81,8 @@ const SimpleProductView = async ({product}:{product:WooProduct}) => {
                   className="relative aspect-square rounded-lg overflow-hidden bg-gray-100"
                 >
                   <Image
-                    src={img.src}
-                    alt={img.alt}
+                    src={img.src || "/no-image.svg"}
+                    alt={img.alt || product.name}
                     fill
                     className="object-cover"
                   />
@@ -113,15 +126,30 @@ const SimpleProductView = async ({product}:{product:WooProduct}) => {
 
 
 
-        <div
-          className="text-2xl font-medium text-gray-900 mb-3"
-          dangerouslySetInnerHTML={{
-            __html:
-              (siteConfig.currency + ' ' + product?.sale_price) ||
-              siteConfig.currency + ' ' + product?.regular_price ||
-              "<span>—</span>",
-          }}
-        />
+        <div className="text-2xl font-medium text-gray-900 mb-3">
+          {hasSale ? (
+            <>
+              <span className="text-red-600">
+                {siteConfig.currency} {product.sale_price}
+              </span>{" "}
+              {regular && (
+                <span className="line-through text-gray-400">
+                  {siteConfig.currency} {regular}
+                </span>
+              )}
+            </>
+          ) : regular ? (
+            <span>
+              {siteConfig.currency} {regular}
+            </span>
+          ) : basePrice ? (
+            <span>
+              {siteConfig.currency} {basePrice}
+            </span>
+          ) : (
+            <span>—</span>
+          )}
+        </div>
         <div>
 
         </div>

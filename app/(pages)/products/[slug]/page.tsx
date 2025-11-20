@@ -40,7 +40,7 @@ export async function generateMetadata(
         `Veja este produto na ${siteConfig.title}.`,
       images: [
         {
-          url: product.images?.[0]?.src || "/placeholder.png",
+          url: product.images?.[0]?.src || "/no-image.svg",
           width: 800,
           height: 600,
           alt: product.name,
@@ -53,7 +53,7 @@ export async function generateMetadata(
       description:
         product.short_description?.replace(/<[^>]*>?/gm, "").slice(0, 150) ||
         `Veja este produto na ${siteConfig.title}.`,
-      images: [product.images?.[0]?.src || "/placeholder.png"],
+      images: [product.images?.[0]?.src || "/no-image.svg"],
     },
   };
 }

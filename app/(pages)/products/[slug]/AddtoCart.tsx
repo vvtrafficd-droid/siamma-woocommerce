@@ -15,7 +15,7 @@ const AddToCart = ({product}:{product:any}) => {
       price: product.price,
       regular_price: product.regular_price,
       sale_price: product.sale_price,
-      images: product.images[0]?.src || "",
+      images: product.images[0]?.src || "/no-image.svg",
       type: "simple"
     });
     toast.success("Produto adicionado ao carrinho!");
