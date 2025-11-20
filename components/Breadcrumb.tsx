@@ -10,19 +10,19 @@ type Props = {
 
 export function Breadcrumb({ links }: Props) {
     return (
-        <div className='bg-gray-100'>
-            <div className='container mx-auto py-4 px-4'>
+        <div className='py-2'>
+            <div className='container mx-auto  px-8'>
                 <ul className=" flex items-center gap-x-3">
                     {links.map((link, index) => {
                         return link.href === '#' ? (
                             <li key={index}>
-                                <span className="text-base text-green-400">{link.title}</span>
+                                <span className=" text-green-400 text-sm">{link.title}</span>
                             </li>
                         ) : (
                             <li key={index} className="inline-flex items-center gap-x-1">
                                 <Link
                                     prefetch={true}
-                                    className={twMerge('text-base text-black/60', index === links.length - 1 && 'text-black')}
+                                    className={twMerge('text-sm text-black/60', index === links.length - 1 && 'text-black')}
                                     href={link.href}
                                 >
                                     {link.title}

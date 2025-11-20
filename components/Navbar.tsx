@@ -27,15 +27,15 @@ export default function Navbar() {
   return (
     <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="container mx-auto flex items-center gap-4 px-6 py-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-[160px]">
           <MobileMenu />
           <Link href="/" className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
             {siteConfig.logo ? (
               <Image
                 src={siteConfig.logo}
                 alt={siteConfig.logoName}
-                height={40}
-                width={40}
+                height={80}
+                width={180}
                 className="object-contain"
               />
             ) : (
@@ -51,7 +51,7 @@ export default function Navbar() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Pesquise por item"
-              className="flex-1 bg-transparent border-none shadow-none focus-visible:ring-0"
+              className="flex-1 bg-transparent border-none shadow-none focus-visible:ring-0 h-8"
             />
             <Button type="submit" variant="ghost" size="icon">
               <i className="ri-search-line text-xl"></i>
