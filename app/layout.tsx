@@ -44,8 +44,8 @@ export default function RootLayout({
                 primary: '#fff'
               },
               style:{
-                background: 'fff',
-                color: '#1E2939',
+                background: 'green',
+                color: '#fff',
                 padding:'10px 20px ',
                 border: '1px solid #E2E8F0',
                 boxShadow: '0 2px 6px rgba(0,0,0,0.15)',

@@ -18,7 +18,11 @@ const AddToCart = ({product}:{product:any}) => {
       images: product.images[0]?.src || "/no-image.svg",
       type: "simple"
     });
-    toast.success("Produto adicionado ao carrinho!");
+    toast.success("Produto adicionado ao carrinho!", {
+      duration: 3000,
+      position: "top-right",
+
+    });
   };
 
   return (
