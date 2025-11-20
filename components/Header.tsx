@@ -46,23 +46,34 @@ const Header = () => {
         </div>
 
         <div className='flex items-center justify-end gap-2'>
-          <Button asChild variant='outline' className='bg-transparent border-white/40 text-white hover:bg-white/10'>
-            <Link href='/orders'>Meus pedidos</Link>
-          </Button>
-          <Button asChild variant='outline' className='bg-transparent border-white/40 text-white hover:bg-white/10'>
-            <Link href='/account'>Meus dados</Link>
-          </Button>
-          {hydrated && email && (
-            <Button
-              variant='outline'
-              className='bg-transparent border-white/40 text-white hover:bg-white/10'
-              onClick={() => {
-                logout();
-                router.push('/');
-              }}
-            >
-              Sair
-            </Button>
+          {hydrated && email ? (
+            <>
+              <Button asChild variant='outline' className='bg-transparent border-white/40 text-white hover:bg-white/10'>
+                <Link href='/orders'>Meus pedidos</Link>
+              </Button>
+              <Button asChild variant='outline' className='bg-transparent border-white/40 text-white hover:bg-white/10'>
+                <Link href='/account'>Minha conta</Link>
+              </Button>
+              <Button
+                variant='outline'
+                className='bg-transparent border-white/40 text-white hover:bg-white/10'
+                onClick={() => {
+                  logout();
+                  router.push('/');
+                }}
+              >
+                Sair
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button asChild variant='outline' className='bg-transparent border-white/40 text-white hover:bg-white/10'>
+                <Link href='/login'>Entrar</Link>
+              </Button>
+              <Button asChild variant='outline' className='bg-transparent border-white/40 text-white hover:bg-white/10'>
+                <Link href='/register'>Registar</Link>
+              </Button>
+            </>
           )}
         </div>
       </div>
