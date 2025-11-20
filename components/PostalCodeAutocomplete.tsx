@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, MapPin } from "lucide-react";
-import { formatPostalCode, searchPostalCodes, PostalCodeInfo } from "@/lib/postalCodes";
+import { Search } from "lucide-react";
+import { formatPostalCode, PostalCodeInfo, isValidPostalCode } from "@/lib/postalCodes";
 import { cn } from "@/lib/utils";
 
 interface PostalCodeAutocompleteProps {
@@ -20,15 +20,14 @@ export const PostalCodeAutocomplete: React.FC<PostalCodeAutocompleteProps> = ({
   placeholder = "XXXX-XXX",
   className,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchResults, setSearchResults] = useState<PostalCodeInfo[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const controllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        setHighlightedIndex(-1);
       }
     };
 
@@ -37,16 +36,28 @@ export const PostalCodeAutocomplete: React.FC<PostalCodeAutocompleteProps> = ({
   }, []);
 
   useEffect(() => {
-    if (value.length >= 2) {
-      const results = searchPostalCodes(value);
-      setSearchResults(results);
-      setIsOpen(true);
-      setHighlightedIndex(-1);
-    } else {
-      setSearchResults([]);
-      setIsOpen(false);
-    }
-  }, [value]);
+    if (!isValidPostalCode(value)) return;
+    if (controllerRef.current) controllerRef.current.abort();
+    const controller = new AbortController();
+    controllerRef.current = controller;
+    const run = async () => {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=pt&postalcode=${encodeURIComponent(value)}&limit=1`, { signal: controller.signal });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!Array.isArray(data) || data.length === 0) return;
+        const item = data[0];
+        const addr = item.address || {};
+        const locality = addr.city || addr.town || addr.village || "";
+        const municipality = addr.county || addr.city || addr.town || "";
+        const district = addr.state || "";
+        const info: PostalCodeInfo = { code: value, locality, municipality, district };
+        onSelect(info);
+      } catch {}
+    };
+    run();
+    return () => controller.abort();
+  }, [value, onSelect]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
@@ -57,19 +68,14 @@ export const PostalCodeAutocomplete: React.FC<PostalCodeAutocompleteProps> = ({
   const handleSelect = (postalCode: PostalCodeInfo) => {
     onChange(postalCode.code);
     onSelect(postalCode);
-    setIsOpen(false);
     setHighlightedIndex(-1);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!isOpen) return;
-
     switch (e.key) {
       case "ArrowDown":
         e.preventDefault();
-        setHighlightedIndex((prev) => 
-          prev < searchResults.length - 1 ? prev + 1 : prev
-        );
+        setHighlightedIndex((prev) => prev + 1);
         break;
       case "ArrowUp":
         e.preventDefault();
@@ -77,12 +83,11 @@ export const PostalCodeAutocomplete: React.FC<PostalCodeAutocompleteProps> = ({
         break;
       case "Enter":
         e.preventDefault();
-        if (highlightedIndex >= 0 && searchResults[highlightedIndex]) {
-          handleSelect(searchResults[highlightedIndex]);
+        if (isValidPostalCode(value)) {
+          handleSelect({ code: value, locality: "", municipality: "", district: "" });
         }
         break;
       case "Escape":
-        setIsOpen(false);
         setHighlightedIndex(-1);
         break;
     }
@@ -106,38 +111,7 @@ export const PostalCodeAutocomplete: React.FC<PostalCodeAutocompleteProps> = ({
         />
       </div>
 
-      {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
-          {searchResults.length === 0 ? (
-            <div className="px-4 py-2 text-sm text-gray-500">
-              Nenhum código postal encontrado
-            </div>
-          ) : (
-            searchResults.map((result, index) => (
-              <div
-                key={`${result.code}-${index}`}
-                className={cn(
-                  "px-4 py-2 cursor-pointer hover:bg-gray-100 flex items-start gap-2",
-                  highlightedIndex === index && "bg-gray-100"
-                )}
-                onClick={() => handleSelect(result)}
-                onMouseEnter={() => setHighlightedIndex(index)}
-              >
-                <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm">{result.code}</div>
-                  <div className="text-xs text-gray-600 truncate">
-                    {result.locality}, {result.municipality}
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    {result.district}
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-    </div>
+      
+  </div>
   );
 };

@@ -16,7 +16,8 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { cn } from "@/lib/utils";
 import { Truck, Store } from "lucide-react";
 import { PostalCodeAutocomplete } from "@/components/PostalCodeAutocomplete";
-import { PostalCodeInfo, isValidPostalCode } from "@/lib/postalCodes";
+import { PostalCodeInfo, isValidPostalCode, isAllowedDeliveryPostalCode } from "@/lib/postalCodes";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { PhoneInput } from "@/components/PhoneInput";
 
 interface CheckoutFormData {
@@ -52,6 +53,8 @@ const CheckoutPage = () => {
   const [distanceKm, setDistanceKm] = useState<number | null>(null);
   const [deliveryEligible, setDeliveryEligible] = useState<boolean>(true);
   const [customerPrefilled, setCustomerPrefilled] = useState<boolean>(false);
+  const [deliveryRestrictionOpen, setDeliveryRestrictionOpen] = useState<boolean>(false);
+  const [restrictedZipShown, setRestrictedZipShown] = useState<string | null>(null);
 
   const { items, clearCart } = useCartStore();
   const orderItems = items;
@@ -123,6 +126,14 @@ const CheckoutPage = () => {
       setDeliveryEligible(true);
       return;
     }
+    if (zip && !isAllowedDeliveryPostalCode(zip)) {
+      setDeliveryEligible(false);
+      if (restrictedZipShown !== zip) {
+        setDeliveryRestrictionOpen(true);
+        setRestrictedZipShown(zip);
+      }
+      return;
+    }
     const controller = new AbortController();
     const check = async () => {
       try {
@@ -169,6 +180,10 @@ const CheckoutPage = () => {
   const onSubmit = async (data: CheckoutFormData) => {
     if (data.fulfillment === "delivery" && !isValidPostalCode(data.zip)) {
       alert("Por favor, insira um código postal válido no formato XXXX-XXX");
+      return;
+    }
+    if (data.fulfillment === "delivery" && isValidPostalCode(data.zip) && !isAllowedDeliveryPostalCode(data.zip)) {
+      alert("Entrega indisponível nesta região. Selecione retirada.");
       return;
     }
     if (data.fulfillment === "delivery" && distanceKm !== null && distanceKm > 50) {
@@ -364,6 +379,11 @@ const CheckoutPage = () => {
                           Formato inválido. Use XXXX-XXX
                         </div>
                       )}
+                      {watch("zip") && isValidPostalCode(watch("zip")) && !isAllowedDeliveryPostalCode(watch("zip")) && (
+                        <div className="mt-1 text-xs text-red-600">
+                          Não entregamos nesta região. Apenas retirada está disponível.
+                        </div>
+                      )}
                     </div>
 
                     <div className="sm:col-span-2">
@@ -500,7 +520,8 @@ const CheckoutPage = () => {
                   loading ||
                   orderItems.length === 0 ||
                   (watch("fulfillment") === "delivery" && distanceKm !== null && distanceKm > 50) ||
-                  (watch("fulfillment") === "delivery" && watch("zip") && !isValidPostalCode(watch("zip")))
+                  (watch("fulfillment") === "delivery" && watch("zip") && !isValidPostalCode(watch("zip"))) ||
+                  (watch("fulfillment") === "delivery" && watch("zip") && isValidPostalCode(watch("zip") || "") && !isAllowedDeliveryPostalCode(watch("zip")))
                 }
               >
                 {loading ? "A processar encomenda..." : "Finalizar encomenda"}
@@ -510,8 +531,37 @@ const CheckoutPage = () => {
         </form>
       </div>
     </section>
+    <Dialog open={deliveryRestrictionOpen} onOpenChange={setDeliveryRestrictionOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Entrega indisponível nesta região</DialogTitle>
+          <DialogDescription>
+            Nesta região não realizamos entrega. Está disponível apenas retirada. Deseja fazer retirada ou cancelar?
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button
+            variant="default"
+            onClick={() => {
+              setValue("fulfillment", "pickup", { shouldValidate: true });
+              setDeliveryRestrictionOpen(false);
+            }}
+          >
+            Fazer retirada
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setDeliveryRestrictionOpen(false);
+            }}
+          >
+            Cancelar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
     </>
-    
+
   );
 };
 
