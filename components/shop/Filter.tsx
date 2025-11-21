@@ -69,12 +69,6 @@ const FilterShop = () => {
                                 )}
                             >
                                 <p className="capitalize">{cat.name}</p>
-                                {cat.count != null && <p className={cn(
-                                    "w-5 h-5 text-center text-xs flex items-center justify-center rounded-full transition",
-                                    selectedCategory === cat.id
-                                        ? "bg-green-600 text-white"
-                                        : "hover:bg-gray-100 text-gray-700"
-                                )}>{cat.count}</p>}
                             </button>
                         </li>
                     ))}

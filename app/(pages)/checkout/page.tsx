@@ -63,7 +63,7 @@ const CheckoutPage = () => {
     (sum, item) => sum + +item.price * item.quantity,
     0
   );
-  const shipping = 250;
+  const shipping = 0;
   const total = subtotal + shipping;
 
   const handlePostalCodeSelect = (postalCode: PostalCodeInfo) => {

@@ -6,6 +6,42 @@ import { siteConfig } from "@/lib/config";
 import { Facebook, Instagram } from "lucide-react";
 
 const Footer = () => {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const [email, setEmail] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [message, setMessage] = React.useState<string | null>(null);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setMessage(null);
+    const valid = /.+@.+\..+/.test(email);
+    if (!valid) {
+      setMessage("Email inválido");
+      return;
+    }
+    setLoading(true);
+    try {
+      const local = email.split("@")[0] || "Cliente";
+      const firstName = local.charAt(0).toUpperCase() + local.slice(1);
+      const lastName = "Newsletter";
+      const res = await fetch(`${baseUrl}/api/customers/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstName, lastName, email, country: "Portugal" }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessage(data?.error || "Falha na subscrição");
+        return;
+      }
+      setMessage("Subscreveu com sucesso! Obrigado, breve você receberá promoções e novidades.");
+      setEmail("");
+    } catch {
+      setMessage("Falha na subscrição");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <footer className="bg-white border-t border-gray-300 text-gray-700 pt-10 pb-6">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
@@ -57,19 +93,28 @@ const Footer = () => {
           <p className="text-sm mb-4">
             Receba ofertas e novidades diretamente no seu e-mail.
           </p>
-          <form className="flex">
+          <form className="flex" onSubmit={onSubmit}>
             <input
               type="email"
               placeholder="Seu email"
               className="w-full px-3 py-2 rounded-l-md text-gray-800 focus:outline-none border border-gray-300"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
             />
             <button
               type="submit"
               className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-r-md"
+              disabled={loading}
             >
-              Inscrever
+              {loading ? "A inscrever..." : "Inscrever"}
             </button>
           </form>
+          {message && (
+            <div className={"text-sm mt-2 " + (message.includes("sucesso") ? "text-green-600" : "text-red-600")}>
+              {message}
+            </div>
+          )}
         </div>
       </div>
 
