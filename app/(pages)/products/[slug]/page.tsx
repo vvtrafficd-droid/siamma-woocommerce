@@ -5,7 +5,6 @@ import SimpleProductView from "./SimpleProductView";
 import VariableProductView from "./VariableProductView";
 import { WooProduct } from "@/types/woo";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import ProductDescription from "./ProductDescription";
 import { Metadata } from "next";
 import { siteConfig } from "@/lib/config";
 
@@ -92,11 +91,7 @@ const ProductPage = async ({
         {product.type === "variable" && <VariableProductView product={product} />}
       </div>
 
-      <div className="w-full bg-gray-100">
-        <div className="container mx-auto px-4">
-          <ProductDescription product={product} />
-        </div>
-      </div>
+      
     </>
   );
 };

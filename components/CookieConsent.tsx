@@ -32,7 +32,7 @@ function writeConsent(state: ConsentState) {
 }
 
 const CookieConsent: React.FC = () => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(() => !readConsent());
   const [expanded, setExpanded] = useState(false);
   const [state, setState] = useState<ConsentState>({
     necessary: true,
@@ -41,10 +41,7 @@ const CookieConsent: React.FC = () => {
     marketing: false,
   });
 
-  useEffect(() => {
-    const existing = readConsent();
-    if (!existing) setVisible(true);
-  }, []);
+  
 
   useEffect(() => {
     const open = () => setVisible(true);

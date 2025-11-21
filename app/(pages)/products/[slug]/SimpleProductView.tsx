@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import AddToCart from "./AddtoCart";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -44,20 +44,15 @@ interface WooProduct {
 const SimpleProductView = ({product}:{product:WooProduct}) => {
 
 
-  const rating = parseFloat(product.average_rating || "0");
   const initialMain = product.images?.[0]?.src || "/no-image.svg";
   const [mainSrc, setMainSrc] = useState<string>(initialMain);
-
-  useEffect(() => {
-    setMainSrc(product.images?.[0]?.src || "/no-image.svg");
-  }, [product.images]);
 
   const hasSale = Boolean(product.on_sale && product.sale_price && product.sale_price.trim() !== "");
   const regular = (product.regular_price || "").trim();
   const basePrice = (product.price || "").trim();
   return (
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10" key={product.id}>
         {/* ✅ Product Image Gallery */}
         <div className="space-y-4">
           <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-gray-100">
@@ -101,27 +96,8 @@ const SimpleProductView = ({product}:{product:WooProduct}) => {
 
         <h1 className="text-4xl font-semibold mb-1">{product.name}</h1>
 
-        <div className="flex gap-3 my-4">
-          {/* ⭐ Ratings */}
-          {product.rating_count >= 0 && (
-            <div className="flex items-center gap-1 text-md">
-              {[...Array(5)].map((_, i) => (
-                <i key={i} className={"ri-star-fill " + `${i < Math.round(rating)
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "text-gray-300"
-                  }`}></i>
-
-              ))}
-              <span className="text-md text-gray-500 h-full flex items-center">
-                ({product.rating_count} avaliações)
-              </span>
-            </div>
-          )}
-
-          <div>
-            {product?.stock_status === "instock" ? <span className="text-green-500"><i className="ri-checkbox-circle-line"></i> Em stock</span> : <span className="text-red-500"><i className="ri-close-circle-line"></i> Sem stock</span>}
-          </div>
-
+        <div className="my-4">
+          {product?.stock_status === "instock" ? <span className="text-green-500"><i className="ri-checkbox-circle-line"></i> Em stock</span> : <span className="text-red-500"><i className="ri-close-circle-line"></i> Sem stock</span>}
         </div>
 
 

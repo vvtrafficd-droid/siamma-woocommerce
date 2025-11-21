@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/store/authStore'
@@ -8,10 +8,6 @@ import { useRouter } from 'next/navigation'
 const Header = () => {
   const router = useRouter();
   const { email, logout } = useAuthStore();
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
   return (
     <section className='hidden md:block bg-gray-800 text-white'>
       <div className='container mx-auto px-6 py-2 grid grid-cols-3 items-center'>
@@ -46,7 +42,7 @@ const Header = () => {
         </div>
 
         <div className='flex items-center justify-end gap-2'>
-          {hydrated && email ? (
+          {email ? (
             <>
               <Button asChild variant='outline' className='bg-transparent border-white/40 text-white hover:bg-white/10'>
                 <Link href='/orders'>Meus pedidos</Link>

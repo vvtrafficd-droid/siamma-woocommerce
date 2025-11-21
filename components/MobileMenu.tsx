@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
+import { siteConfig } from "@/lib/config";
 
 const navItems = [
     { name: "Início", href: "/" },
@@ -23,11 +24,11 @@ const MobileMenu = () => {
 
                 <SheetContent
                     side="right"
-                    className="w-100 bg-white"
+                    className="w-3/4 sm:max-w-sm bg-white overflow-y-auto"
                 >
-                    <div className="flex items-center justify-between border-b border-gray-200 p-4  transition-transform duration-300">
+                    <div className="flex items-center justify-between border-b border-gray-200 p-4">
                         <SheetTitle>
-                            Zain<span className="text-green-400">Mart</span>
+                            {siteConfig.logoName || siteConfig.title}
                         </SheetTitle>
                         <SheetClose asChild>
                             <button>

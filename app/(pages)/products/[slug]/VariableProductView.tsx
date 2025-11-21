@@ -7,7 +7,6 @@ import { WooProduct } from "@/types/woo";
 import AddToCartVariation from "./AddtoCartVariation";
 import { siteConfig } from "@/lib/config";
 import { Separator } from "@/components/ui/separator";
-import { set } from "nprogress";
 import { Button } from "@/components/ui/button";
 
 const VariableProductView = ({ product }: { product: WooProduct }) => {
@@ -88,7 +87,6 @@ const VariableProductView = ({ product }: { product: WooProduct }) => {
     setSelectedVariation(matched || null);
   }, [selectedOptions, productVariations]);
 
-  const rating = parseFloat(product.average_rating || "0");
 
   const [mainSrc, setMainSrc] = useState<string>(selectedVariation?.image?.src || mainImage);
 
@@ -141,27 +139,8 @@ const VariableProductView = ({ product }: { product: WooProduct }) => {
 
         <h1 className="text-4xl font-semibold mb-1">{product.name}</h1>
 
-        <div className="flex gap-3 my-4">
-          {/* ⭐ Ratings */}
-          {product.rating_count >= 0 && (
-            <div className="flex items-center gap-1 text-md">
-              {[...Array(5)].map((_, i) => (
-                <i key={i} className={"ri-star-fill " + `${i < Math.round(rating)
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "text-gray-300"
-                  }`}></i>
-
-              ))}
-              <span className="text-md text-gray-500 h-full flex items-center">
-                ({product.rating_count} avaliações)
-              </span>
-            </div>
-          )}
-
-          <div>
-            {selectedVariation?.stock_status === "instock" ? <span className="text-green-500"><i className="ri-checkbox-circle-line"></i> Em stock</span> : <span className="text-red-500"><i className="ri-close-circle-line"></i> Sem stock</span>}
-          </div>
-
+        <div className="my-4">
+          {selectedVariation?.stock_status === "instock" ? <span className="text-green-500"><i className="ri-checkbox-circle-line"></i> Em stock</span> : <span className="text-red-500"><i className="ri-close-circle-line"></i> Sem stock</span>}
         </div>
 
 
