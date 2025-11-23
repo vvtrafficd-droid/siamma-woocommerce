@@ -11,11 +11,10 @@ const Header = () => {
   return (
     <section className='hidden md:block bg-gray-800 text-white'>
       <div className='container mx-auto px-6 py-2 grid grid-cols-3 items-center'>
-        <div className='flex flex-wrap items-center gap-4'>
-          <p className='text-sm'>Segunda a Sexta: 8am - 8pm</p>
+        <div className='flex flex-wrap items-center gap-2'>
+          <span className='text-sm'>Segunda a Sexta: 8am - 8pm</span>
           <span className='hidden lg:inline-block text-white/40'>•</span>
-          <p className='text-sm'>Sábado e Domingo: 8am - 7pm</p>
-          <span className='hidden lg:inline-block text-white/40'>•</span>
+          <span className='text-sm'>Sábado e Domingo: 8am - 7pm</span>
         </div>
 
         <div className='flex items-center justify-center gap-2'>
