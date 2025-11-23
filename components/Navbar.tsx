@@ -26,8 +26,8 @@ export default function Navbar() {
 
   return (
     <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-40">
-      <div className="container mx-auto flex items-center gap-4 px-6 py-4">
-        <div className="flex items-center gap-3 w-[160px]">
+      <div className="container mx-auto flex items-center gap-2 px-2 py-2 sm:gap-4 sm:px-6 sm:py-4">
+        <div className="flex items-center gap-3 w-[100px] sm:w-auto md:w-[160px]">  
           <MobileMenu />
           <Link href="/" className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
             {siteConfig.logo ? (
@@ -46,7 +46,7 @@ export default function Navbar() {
 
         <form onSubmit={onSubmit} className="flex-1">
           <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
-            <i className="ri-search-line text-lg text-gray-500"></i>
+            {/* <i className="ri-search-line text-lg text-gray-500"></i> */}
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
