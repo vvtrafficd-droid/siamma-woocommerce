@@ -24,7 +24,7 @@ const sortOptions = [
     { label: "Padrão", value: "rating" },
     { label: "Preço: baixo para alto", value: "price_asc" },
     { label: "Preço: alto para baixo", value: "price_desc" },
-    { label: "Mais recentes", value: "date" },
+    { label: "Mais recentes", value: "date_desc" },
 ];
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -42,7 +42,7 @@ export default function ShopPage() {
 
     // ✅ Read filters from URL
     const selectedCategory = Number(searchParams.get("category")) || 0;
-    const sortBy = searchParams.get("sortBy") || "date";
+    const sortBy = searchParams.get("sortBy") || "date_desc";
     const page = Number(searchParams.get("page")) || 1;
     const search = searchParams.get("search") || "";
 
