@@ -2,19 +2,19 @@ import { siteConfig } from "./config";
 
 export const pages = {
   about: {
-    title: "About Us",
-    description: `Learn more about ${siteConfig.title} — our mission, values, and the team dedicated to bringing you the best shopping experience.`,
+    title: "Acerca de nos",
+    description: `Sobre a Siamma — nossa missão, visão e valores como loja online de confiança.`,
   },
   contact: {
-    title: "Contact Us",
+    title: "Contacto",
     description: `Get in touch with ${siteConfig.title} — we're here to help with any questions, feedback, or support you may need.`,
   },
   privacy: {
-    title: "Privacy Policy",
+    title: "Politica de Privacidade",
     description: `Understand how ${siteConfig.title} collects, uses, and protects your personal information.`,
   },
   terms: {
-    title: "Terms & Conditions",
+    title: "Termos e Condições",
     description: `Read the terms and conditions of using ${siteConfig.title} and our online shopping services.`,
   },
   faq: {

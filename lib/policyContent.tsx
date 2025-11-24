@@ -1,6 +1,8 @@
 import React from "react";
+import { aboutContent } from "./aboutContent";
 
 export const policyContent: Record<string, React.ReactNode> = {
+  about: aboutContent,
   privacy: (
     <div className="prose max-w-none">
       <h2>Introdução</h2>
