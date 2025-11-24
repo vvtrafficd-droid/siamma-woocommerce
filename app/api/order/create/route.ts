@@ -1,40 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { wcApi } from "@/lib/woocommerce";
 
-async function geocode(query: string): Promise<{ lat: number; lon: number } | null> {
-  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
-  const res = await fetch(url, {
-    headers: {
-      "Accept": "application/json",
-    },
-  });
-  if (!res.ok) return null;
-  const data = await res.json();
-  if (!Array.isArray(data) || data.length === 0) return null;
-  const first = data[0];
-  const lat = parseFloat(first.lat);
-  const lon = parseFloat(first.lon);
-  if (Number.isNaN(lat) || Number.isNaN(lon)) return null;
-  return { lat, lon };
-}
-
-function haversineKm(a: { lat: number; lon: number }, b: { lat: number; lon: number }): number {
-  const toRad = (v: number) => (v * Math.PI) / 180;
-  const R = 6371;
-  const dLat = toRad(b.lat - a.lat);
-  const dLon = toRad(b.lon - a.lon);
-  const lat1 = toRad(a.lat);
-  const lat2 = toRad(b.lat);
-  const sinDLat = Math.sin(dLat / 2);
-  const sinDLon = Math.sin(dLon / 2);
-  const c = 2 * Math.asin(
-    Math.sqrt(
-      sinDLat * sinDLat + Math.cos(lat1) * Math.cos(lat2) * sinDLon * sinDLon
-    )
-  );
-  return R * c;
-}
-
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -45,7 +11,7 @@ export async function POST(req: NextRequest) {
       email,
       address,
       country,
-      zip,
+      city, // city is now directly provided
       phone,
       paymentMethod,
       items,
@@ -54,25 +20,8 @@ export async function POST(req: NextRequest) {
       fulfillment,
     } = body;
 
-    if (fulfillment === "delivery") {
-      const originQuery = "4835-517 Nespereira, Portugal";
-      const destQuery = `${zip} Portugal`;
-      const origin = await geocode(originQuery);
-      const dest = await geocode(destQuery);
-      if (!origin || !dest) {
-        return NextResponse.json(
-          { error: "Não foi possível localizar o código postal" },
-          { status: 400 }
-        );
-      }
-      const distanceKm = Math.round(haversineKm(origin, dest));
-      if (distanceKm > 50) {
-        return NextResponse.json(
-          { error: "Fora da zona de entrega", distanceKm },
-          { status: 400 }
-        );
-      }
-    }
+    // The geocoding and distance check logic is removed.
+    // The frontend now controls which cities are allowed.
 
     // Map cart items to WooCommerce order line_items
     const line_items = items.map((item: any) => ({
@@ -90,9 +39,9 @@ export async function POST(req: NextRequest) {
         first_name: firstName,
         last_name: lastName,
         address_1: address,
-        city: body.city || body.municipality || "",
-        state: body.district || "",
-        postcode: zip,
+        city: city,
+        state: "", // District is no longer available
+        postcode: "", // Postal code is no longer used
         country,
         email,
         phone,
@@ -101,9 +50,9 @@ export async function POST(req: NextRequest) {
         first_name: firstName,
         last_name: lastName,
         address_1: address,
-        city: body.city || body.municipality || "",
-        state: body.district || "",
-        postcode: zip,
+        city: city,
+        state: "", // District is no longer available
+        postcode: "", // Postal code is no longer used
         country,
       },
       line_items,
