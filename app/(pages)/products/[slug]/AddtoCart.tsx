@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useCartStore}  from "@/store/cartStore";
-import  toast  from "react-hot-toast";
+import { toast } from "sonner";
 
 
 const AddToCart = ({product}:{product:any}) => {
@@ -21,6 +21,7 @@ const AddToCart = ({product}:{product:any}) => {
     toast.success("Produto adicionado ao carrinho!", {
       duration: 3000,
       position: "top-right",
+      
 
     });
   };

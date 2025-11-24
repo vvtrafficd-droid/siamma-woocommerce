@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/store/cartStore";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { WooProduct } from "@/types/woo";
 import { siteConfig } from "@/lib/config";
 
@@ -50,7 +50,11 @@ const ProductCard: React.FC<{ product: WooProduct }> = ({ product }) => {
               images: imageUrl,
               type: "simple",
             });
-            toast.success("Produto adicionado ao carrinho!");
+            toast.success("Produto adicionado ao carrinho!", {
+              duration: 3000,
+              position: "top-right",
+              
+            });
           }}
           className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-green-600 text-white hover:bg-green-700 flex items-center justify-center shadow-md"
           aria-label="Adicionar ao carrinho"

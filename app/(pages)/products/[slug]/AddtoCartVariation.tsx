@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useCartStore}  from "@/store/cartStore";
-import  toast  from "react-hot-toast";
+import { toast } from "sonner";
 
 const AddToCartVariation = ({product,variation}:{product:any,variation:any}) => {
   const {addToCart} = useCartStore();

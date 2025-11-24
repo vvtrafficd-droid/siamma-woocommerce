@@ -7,7 +7,7 @@ import "remixicon/fonts/remixicon.css";
 import Navbar from "@/components/Navbar";
 import TopLoader from "@/components/TopLoader";
 import { siteConfig } from "@/lib/config";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "@/components/ui/sonner";
 import CookieConsent from "@/components/CookieConsent";
 
 
@@ -40,27 +40,7 @@ export default function RootLayout({
         {children}
         <Footer />
         <CookieConsent />
-        <Toaster position="top-center"
-          toastOptions={{
-            success:{
-              duration: 2000,
-              icon: <i className="ri-check-line" />,
-              iconTheme:{
-                secondary: '#00f',
-                primary: '#fff'
-              },
-              style:{
-                background: 'green',
-                color: '#fff',
-                padding:'10px 20px ',
-                border: '1px solid #E2E8F0',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-                borderRadius: '10px',
-                fontWeight: '500',
-              }
-
-            }
-          }} />
+        <Toaster />
       </body>
     </html>
   );

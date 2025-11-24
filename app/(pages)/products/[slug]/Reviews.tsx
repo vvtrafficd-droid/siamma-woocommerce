@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 const Reviews = ({
     id,
