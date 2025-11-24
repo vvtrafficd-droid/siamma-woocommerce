@@ -143,10 +143,12 @@ const CheckoutPage = () => {
 
       if (!res.ok) throw new Error("Failed to place order");
 
+      const { order } = await res.json();
+
       setSuccess(true);
       clearCart();
       reset();
-      router.push('/order-success');
+      router.push(`/orders?email=${data.email}&newOrder=true`);
     } catch (err) {
       console.error("Order error:", err);
       alert("Error placing order. Please try again.");

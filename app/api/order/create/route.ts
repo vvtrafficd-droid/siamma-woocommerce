@@ -23,6 +23,44 @@ export async function POST(req: NextRequest) {
     // The geocoding and distance check logic is removed.
     // The frontend now controls which cities are allowed.
 
+    // Check if customer exists
+    let customerId = 0;
+    try {
+      const { data: existingCustomers } = await wcApi.get("customers", {
+        email: email,
+      });
+      if (existingCustomers.length > 0) {
+        customerId = existingCustomers[0].id;
+      } else {
+        // Create a new customer
+        const { data: newCustomer } = await wcApi.post("customers", {
+          email: email,
+          first_name: firstName,
+          last_name: lastName,
+          billing: {
+            first_name: firstName,
+            last_name: lastName,
+            address_1: address,
+            city: city,
+            country: country,
+            email: email,
+            phone: phone,
+          },
+          shipping: {
+            first_name: firstName,
+            last_name: lastName,
+            address_1: address,
+            city: city,
+            country: country,
+          },
+        });
+        customerId = newCustomer.id;
+      }
+    } catch (error: any) {
+      // Don't block order creation if customer creation fails
+      console.error("Customer creation/lookup error:", error.response?.data || error.message);
+    }
+
     // Map cart items to WooCommerce order line_items
     const line_items = items.map((item: any) => ({
       product_id: +item.product_id,
@@ -35,6 +73,7 @@ export async function POST(req: NextRequest) {
       payment_method_title:
         paymentMethod === "cod" ? "Cash on Delivery" : paymentMethod,
       set_paid: false,
+      customer_id: customerId,
       billing: {
         first_name: firstName,
         last_name: lastName,

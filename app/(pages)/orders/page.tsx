@@ -1,19 +1,24 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { useAuthStore } from "@/store/authStore";
+import { useSearchParams } from "next/navigation";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 const apiBase = baseUrl || "";
 
-export default function OrdersPage() {
+function OrdersPageComponent() {
   const { email: storedEmail, customerId } = useAuthStore();
-  const [email, setEmail] = useState(storedEmail || "mariacliente@gmail.com");
+  const searchParams = useSearchParams();
+  const emailFromQuery = searchParams.get("email");
+  const newOrder = searchParams.get("newOrder");
+
+  const [email, setEmail] = useState(emailFromQuery || storedEmail || "");
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -80,11 +85,20 @@ export default function OrdersPage() {
 
   useEffect(() => {
     if (!hydrated) return;
-    if (customerId || storedEmail) {
-      fetchOrders();
+
+    const fetchInitialOrders = () => {
+      if (customerId || storedEmail || emailFromQuery) {
+        fetchOrders({ email: emailFromQuery || storedEmail });
+      }
+    };
+
+    if (newOrder) {
+      setTimeout(fetchInitialOrders, 2000);
+    } else {
+      fetchInitialOrders();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hydrated, customerId, storedEmail]);
+  }, [hydrated, customerId, storedEmail, emailFromQuery, newOrder]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,5 +174,13 @@ export default function OrdersPage() {
         </div>
       </section>
     </>
+  );
+}
+
+export default function OrdersPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OrdersPageComponent />
+    </Suspense>
   );
 }
