@@ -119,7 +119,7 @@ const Footer = () => {
       </div>
 
       <div className="mt-10 border-t border-gray-300 pt-4 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} {siteConfig.title}. Todos os direitos reservados
+        © {new Date().getFullYear()} {siteConfig.title}. Todos os direitos reservados. Desenvolvido por <a href="https://vvtrafficdata.pt" className="hover:underline">VV Traffic Data</a>.
       </div>
     </footer>
   );

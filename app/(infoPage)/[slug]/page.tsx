@@ -48,7 +48,7 @@ const InfoPage = async ({
             <div className="max-w-3xl mx-auto py-16 text-center min-h-[70vh]">
                 <h1 className="text-3xl font-semibold mb-4">Page Not Found</h1>
                 <p className="text-gray-600">
-                    Sorry, the page you’re looking for doesn’t exist.
+                  Nada encontrado aqui. Verifique o URL ou volte para a página inicial.
                 </p>
             </div>
         );
