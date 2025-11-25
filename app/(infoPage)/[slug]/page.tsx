@@ -62,9 +62,13 @@ const InfoPage = async ({
                     { title: 'Home', href: '/' },
                     { title: page.title, href: '#' },
                 ]} />
-            <div className="max-w-3xl mx-auto py-16 min-h-[70vh]">
-                <h1 className="text-4xl font-semibold mb-6">{page.title}</h1>
-                <p className="text-gray-700 leading-relaxed text-lg mb-8">{page.description}</p>
+            <div className={`${slug === 'about' ? 'max-w-6xl' : 'max-w-3xl'} mx-auto py-16 min-h-[70vh]`}>
+                {slug !== 'about' && (
+                    <>
+                        <h1 className="text-4xl font-semibold mb-6">{page.title}</h1>
+                        <p className="text-gray-700 leading-relaxed text-lg mb-8">{page.description}</p>
+                    </>
+                )}
                 {content}
             </div>
         </>
