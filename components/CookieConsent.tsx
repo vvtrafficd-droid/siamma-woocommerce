@@ -16,19 +16,32 @@ const STORAGE_KEY = "cookie_consent";
 function readConsent(): ConsentState | null {
   try {
     const raw = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  try {
+    if (typeof document !== "undefined") {
+      const match = document.cookie.split(";").map((c) => c.trim()).find((c) => c.startsWith(`${STORAGE_KEY}=`));
+      if (match) {
+        const val = decodeURIComponent(match.split("=")[1] || "");
+        return JSON.parse(val);
+      }
+    }
+  } catch {}
+  return null;
 }
 
 function writeConsent(state: ConsentState) {
   const payload = { ...state, timestamp: new Date().toISOString() };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  document.cookie = `${STORAGE_KEY}=${encodeURIComponent(JSON.stringify(payload))}; path=/; SameSite=Lax`;
-  const event = new CustomEvent("cookie-consent-change", { detail: payload });
-  document.dispatchEvent(event);
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  } catch {}
+  try {
+    document.cookie = `${STORAGE_KEY}=${encodeURIComponent(JSON.stringify(payload))}; path=/; SameSite=Lax`;
+  } catch {}
+  try {
+    const event = new CustomEvent("cookie-consent-change", { detail: payload });
+    document.dispatchEvent(event);
+  } catch {}
 }
 
 const CookieConsent: React.FC = () => {
@@ -40,6 +53,7 @@ const CookieConsent: React.FC = () => {
     statistics: false,
     marketing: false,
   });
+
 
   
 
@@ -55,16 +69,18 @@ const CookieConsent: React.FC = () => {
 
   const acceptAll = () => {
     const next = { ...state, preferences: true, statistics: true, marketing: true };
-    setState(next);
-    writeConsent(next);
     setVisible(false);
+    setExpanded(false);
+    setState(next);
+    try { writeConsent(next); } catch {}
   };
 
   const rejectAll = () => {
     const next = { ...state, preferences: false, statistics: false, marketing: false };
-    setState(next);
-    writeConsent(next);
     setVisible(false);
+    setExpanded(false);
+    setState(next);
+    try { writeConsent(next); } catch {}
   };
 
   const save = () => {
@@ -89,9 +105,9 @@ const CookieConsent: React.FC = () => {
             <Link className="underline hover:text-gray-900" href="/privacy">Política de Privacidade</Link>.
           </div>
           <div className="flex flex-wrap gap-2">
-            <button onClick={acceptAll} className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700">Aceitar todos</button>
-            <button onClick={rejectAll} className="px-4 py-2 rounded-md bg-gray-200 text-gray-900 hover:bg-gray-300">Recusar</button>
-            <button onClick={() => setExpanded((v) => !v)} className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700">Personalizar</button>
+            <button type="button" onClick={acceptAll} className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700">Aceitar todos</button>
+            <button type="button" onClick={rejectAll} className="px-4 py-2 rounded-md bg-gray-200 text-gray-900 hover:bg-gray-300">Recusar</button>
+            <button type="button" onClick={() => setExpanded((v) => !v)} className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700">Personalizar</button>
           </div>
         </div>
         {expanded && (
@@ -140,8 +156,8 @@ const CookieConsent: React.FC = () => {
               />
             </div>
             <div className="flex gap-2 pt-2">
-              <button onClick={save} className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700">Salvar preferências</button>
-              <button onClick={() => setVisible(false)} className="px-4 py-2 rounded-md bg-gray-200 text-gray-900 hover:bg-gray-300">Fechar</button>
+              <button type="button" onClick={save} className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700">Salvar preferências</button>
+              <button type="button" onClick={save} className="px-4 py-2 rounded-md bg-gray-200 text-gray-900 hover:bg-gray-300">Fechar</button>
             </div>
           </div>
         )}

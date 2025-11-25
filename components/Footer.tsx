@@ -60,10 +60,14 @@ const Footer = () => {
         {/* Column 2: Customer Service */}
         <div>
           <h3 className="text-gray-900 text-lg font-semibold mb-4">Informações</h3>
-          <ul className="space-y-4 text-sm">
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">Contacto</Link></li>
-            <li><Link href="#" className="hover:text-gray-900 hover:underline">Devolução e Entrega</Link></li>
-          </ul>
+          <p>
+            Endereço: N105 1449, 4835-517 Nespereira, Portugal <br />
+Telefone: <a href="tel:+351253591298" className="hover:text-gray-900 hover:underline">+351 253 591 298</a> <br />
+Horário de funcionamento: 
+Aberto ⋅ Fecha 19:30
+          </p>
+
+
         </div>
 
         {/* Column 3: Information */}
