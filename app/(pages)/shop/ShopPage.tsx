@@ -156,7 +156,7 @@ export default function ShopPage() {
                             <ProductGridSkeleton />
                         ) : products.length > 0 ? (
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                                {products.map((product) => {
+                                {products?.map((product) => {
                                     if (product.type === "simple") {
                                         return <ProductCard key={product.id} product={product} />;
                                     } else if (product.type === "variable") {
