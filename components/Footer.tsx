@@ -64,7 +64,9 @@ const Footer = () => {
             Endereço: N105 1449, 4835-517 Nespereira, Portugal <br />
 Telefone: <a href="tel:+351253591298" className="hover:text-gray-900 hover:underline">+351 253 591 298</a> <br />
 Horário de funcionamento: 
-Aberto ⋅ Fecha 19:30
+Segunda a Sexta: 8am - 8pm <br />
+Sábado e Domingo: 8am - 7pm
+
           </p>
 
 
