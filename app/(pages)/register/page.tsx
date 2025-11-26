@@ -7,8 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { PostalCodeAutocomplete } from "@/components/PostalCodeAutocomplete";
-import { PostalCodeInfo, isValidPostalCode } from "@/lib/postalCodes";
+
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { PhoneInput } from "@/components/PhoneInput";
@@ -19,6 +18,7 @@ type RegisterForm = {
   email: string;
   phone: string;
   zip: string;
+  postalcode: string;
   address: string;
   addressComplement?: string;
   city?: string;
@@ -35,16 +35,9 @@ export default function RegisterPage() {
   const { register, handleSubmit, setValue, watch } = useForm<RegisterForm>({
     defaultValues: { country: "Portugal" },
   });
-  const [selectedPostalCode, setSelectedPostalCode] = useState<PostalCodeInfo | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const onPostalSelect = (pc: PostalCodeInfo) => {
-    setSelectedPostalCode(pc);
-    setValue("city", pc.locality, { shouldValidate: true });
-    setValue("municipality", pc.municipality, { shouldValidate: true });
-    setValue("district", pc.district, { shouldValidate: true });
-    setValue("zip", pc.code, { shouldValidate: true });
-  };
+
 
   const onSubmit = async (data: RegisterForm) => {
     try {
@@ -93,30 +86,22 @@ export default function RegisterPage() {
                   <Label htmlFor="email">Email</Label>
                   <Input id="email" type="email" placeholder="joao@email.com" {...register("email", { required: true })} />
                 </div>
-                <div className="sm:col-span-2">
+
+
+                <div className="sm:col-span-2 text-sm text-gray-600">
                   <Label htmlFor="zip">Código Postal</Label>
-                  <PostalCodeAutocomplete
-                    value={watch("zip") || ""}
-                    onChange={(v) => setValue("zip", v, { shouldValidate: true })}
-                    onSelect={onPostalSelect}
-                    placeholder="XXXX-XXX"
-                  />
-                  {watch("zip") && !isValidPostalCode(watch("zip")) && (
-                    <p className="text-xs text-red-600 mt-1">Formato inválido (XXXX-XXX)</p>
-                  )}
+
+                  <Input id="postalcode" placeholder="XXXX-XXX" {...register("postalcode", { required: true })} />
+
                 </div>
-                {selectedPostalCode && (
-                  <div className="sm:col-span-2 text-sm text-gray-600">
-                    {selectedPostalCode.locality}, {selectedPostalCode.municipality} — {selectedPostalCode.district}
-                  </div>
-                )}
+
                 <div className="sm:col-span-2">
                   <Label htmlFor="address">Endereço</Label>
                   <Input id="address" placeholder="N.º, Rua, Localidade" {...register("address", { required: true })} />
                 </div>
                 <div className="sm:col-span-2">
                   <Label htmlFor="addressComplement">Complemento (opcional)</Label>
-                  <Input id="addressComplement" placeholder="Andar, apartamento" {...register("addressComplement") } />
+                  <Input id="addressComplement" placeholder="Andar, apartamento" {...register("addressComplement")} />
                 </div>
                 <div>
                   <Label htmlFor="city">Cidade</Label>

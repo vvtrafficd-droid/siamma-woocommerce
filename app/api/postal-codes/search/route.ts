@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchPostalCodes } from "@/lib/postalCodes";
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,12 +19,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const results = searchPostalCodes(query);
-    
+
     return NextResponse.json({
       query,
-      results,
-      count: results.length,
+
     });
   } catch (error) {
     console.error("Postal code search error:", error);

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { toast } from "sonner";
 // import toast from "react-hot-toast";
 
 const Reviews = ({
@@ -51,7 +52,7 @@ const Reviews = ({
 
             if (!res.ok) throw new Error("Failed to submit review");
 
-            const {review} = await res.json();
+            const { review } = await res.json();
             setReviews((prev) => [review, ...prev]);
             setForm({ reviewer: "", reviewer_email: "", review: "", rating: 5 });
             toast.success("Review submitted successfully!");
