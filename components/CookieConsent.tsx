@@ -14,19 +14,21 @@ type ConsentState = {
 const STORAGE_KEY = "cookie_consent";
 
 function readConsent(): ConsentState | null {
+  if (typeof window === "undefined") return null;
+
   try {
-    const raw = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
+    const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
-  } catch {}
+  } catch { }
+
   try {
-    if (typeof document !== "undefined") {
-      const match = document.cookie.split(";").map((c) => c.trim()).find((c) => c.startsWith(`${STORAGE_KEY}=`));
-      if (match) {
-        const val = decodeURIComponent(match.split("=")[1] || "");
-        return JSON.parse(val);
-      }
+    const match = document.cookie.split(";").map((c) => c.trim()).find((c) => c.startsWith(`${STORAGE_KEY}=`));
+    if (match) {
+      const val = decodeURIComponent(match.split("=")[1] || "");
+      return JSON.parse(val);
     }
-  } catch {}
+  } catch { }
+
   return null;
 }
 
@@ -34,18 +36,18 @@ function writeConsent(state: ConsentState) {
   const payload = { ...state, timestamp: new Date().toISOString() };
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  } catch {}
+  } catch { }
   try {
-    document.cookie = `${STORAGE_KEY}=${encodeURIComponent(JSON.stringify(payload))}; path=/; SameSite=Lax`;
-  } catch {}
+    document.cookie = `${STORAGE_KEY}=${encodeURIComponent(JSON.stringify(payload))}; path=/; SameSite=Lax; max-age=31536000`;
+  } catch { }
   try {
     const event = new CustomEvent("cookie-consent-change", { detail: payload });
     document.dispatchEvent(event);
-  } catch {}
+  } catch { }
 }
 
 const CookieConsent: React.FC = () => {
-  const [visible, setVisible] = useState(() => !readConsent());
+  const [visible, setVisible] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [state, setState] = useState<ConsentState>({
     necessary: true,
@@ -53,14 +55,26 @@ const CookieConsent: React.FC = () => {
     statistics: false,
     marketing: false,
   });
-
-
-  
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const open = () => setVisible(true);
+    setMounted(true);
+    const consent = readConsent();
+    if (!consent) {
+      setVisible(true);
+    } else {
+      setState(consent);
+    }
+
+    const open = () => {
+      setVisible(true);
+      const current = readConsent();
+      if (current) setState(current);
+    };
+
     document.addEventListener("open-cookie-preferences", open);
-    ;(window as any).openCookiePreferences = open;
+    (window as any).openCookiePreferences = open;
+
     return () => {
       document.removeEventListener("open-cookie-preferences", open);
       delete (window as any).openCookiePreferences;
@@ -69,18 +83,18 @@ const CookieConsent: React.FC = () => {
 
   const acceptAll = () => {
     const next = { ...state, preferences: true, statistics: true, marketing: true };
+    setState(next);
+    writeConsent(next);
     setVisible(false);
     setExpanded(false);
-    setState(next);
-    try { writeConsent(next); } catch {}
   };
 
   const rejectAll = () => {
     const next = { ...state, preferences: false, statistics: false, marketing: false };
+    setState(next);
+    writeConsent(next);
     setVisible(false);
     setExpanded(false);
-    setState(next);
-    try { writeConsent(next); } catch {}
   };
 
   const save = () => {
@@ -88,6 +102,7 @@ const CookieConsent: React.FC = () => {
     setVisible(false);
   };
 
+  if (!mounted) return null;
   if (!visible) return null;
 
   return (
