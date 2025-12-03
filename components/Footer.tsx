@@ -45,11 +45,11 @@ const Footer = () => {
   return (
     <footer className="bg-white border-t border-gray-300 text-gray-700 pt-10 pb-6">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-        
+
         {/* Column 1: Brand Info */}
         <div>
-         <img src="/logo.png" alt={siteConfig.title} className="w-44 h-auto mb-4" />
-        
+          <img src="/logo.png" alt={siteConfig.title} className="w-44 h-auto mb-4" />
+
           <div className="flex space-x-4">
             <Link href="#" className="hover:text-gray-900 hover:underline "><Facebook size={18} /></Link>
             <Link href="#" className="hover:text-gray-900 hover:underline"><Instagram size={18} /></Link>
@@ -62,10 +62,9 @@ const Footer = () => {
           <h3 className="text-gray-900 text-lg font-semibold mb-4">Informações</h3>
           <p>
             Endereço: N105 1449, 4835-517 Nespereira, Portugal <br />
-Telefone: <a href="tel:+351253591298" className="hover:text-gray-900 hover:underline">+351 253 591 298</a> <br />
-Horário de funcionamento: 
-Segunda a Sexta: 8am - 8pm <br />
-Sábado e Domingo: 8am - 7pm
+            Telefone: <a href="tel:+351253591298" className="hover:text-gray-900 hover:underline">+351 253 591 298</a> <br />
+            Horário de funcionamento: <br />
+            Segunda a Sexta: 8:00h - 12:00h e 13:00h - 17:00h
 
           </p>
 

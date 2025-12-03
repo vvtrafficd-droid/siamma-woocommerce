@@ -14,6 +14,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export default function LoginPage() {
   const router = useRouter();
   const login = useAuthStore((s) => s.login);
+  const [loginType, setLoginType] = useState<"particular" | "empresa">("particular");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,12 +53,38 @@ export default function LoginPage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={onSubmit} className="space-y-4">
+                <div className="flex gap-4 mb-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="loginType"
+                      value="particular"
+                      checked={loginType === "particular"}
+                      onChange={() => setLoginType("particular")}
+                      className="accent-green-600"
+                    />
+                    <span>Particular</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="loginType"
+                      value="empresa"
+                      checked={loginType === "empresa"}
+                      onChange={() => setLoginType("empresa")}
+                      className="accent-green-600"
+                    />
+                    <span>Empresa</span>
+                  </label>
+                </div>
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">
+                    {loginType === "particular" ? "Email" : "Nº de Contribuinte / NIPC"}
+                  </Label>
                   <Input
                     id="email"
-                    type="email"
-                    placeholder="joao@email.com"
+                    type={loginType === "particular" ? "email" : "text"}
+                    placeholder={loginType === "particular" ? "joao@email.com" : "123456789"}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required

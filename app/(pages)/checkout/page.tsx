@@ -22,6 +22,7 @@ interface CheckoutFormData {
   firstName: string;
   lastName: string;
   email: string;
+  nif?: string;
   address: string;
   addressComplement?: string;
   country: string;
@@ -29,26 +30,54 @@ interface CheckoutFormData {
   phone: string;
   paymentMethod: string;
   fulfillment: "pickup" | "delivery";
+  pickupDate?: string;
+  pickupTime?: string;
 }
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 const deliveryCities = [
   "Guimarães",
-  "Vizela",
-  "Riba d'Ave (Famalicão)",
-  "Famalicão",
-  "Felgueiras",
+  "Braga",
+  "Vila Nova de Famalicão",
   "Fafe",
-  "São Torcato (Guimarães)",
-  "Caldas das Taipas (Guimarães)",
+  "Felgueiras",
+  "Vizela",
   "Santo Tirso",
+  "Póvoa de Lanhoso",
+  "Barcelos",
+  "Paços de Ferreira",
+  "Lousada",
+  "Trofa",
+  "Amarante",
+  "Vila do Conde",
+  "Póvoa de Varzim",
+  "Maia",
+  "Valongo",
+  "Paredes",
+  "Penafiel",
+  "Porto",
+  "Vila Real",
+  "Celorico de Basto",
+  "Cabeceiras de Basto",
+  "Esposende",
+  "Vieira do Minho",
+  "Amares",
+  "Vila Verde",
+  "Terras de Bouro",
+  "Ponte de Lima",
+  "Viana do Castelo",
+  "Matosinhos",
+  "Gondomar",
+  "Vila Nova de Gaia",
+  "Mondim de Basto",
+  "Ribeira de Pena"
 ];
 
 const CheckoutPage = () => {
   const router = useRouter();
   const { register, handleSubmit, reset, setValue, watch, control, formState: { errors } } = useForm<CheckoutFormData>({
-    defaultValues: { 
+    defaultValues: {
       paymentMethod: "cod",
       country: "Portugal",
       fulfillment: "delivery",
@@ -91,7 +120,7 @@ const CheckoutPage = () => {
         setValue("lastName", b.last_name || c.last_name || "", { shouldValidate: true });
         setValue("address", b.address_1 || s.address_1 || "", { shouldValidate: true });
         setValue("addressComplement", b.address_2 || "", { shouldValidate: true });
-        
+
         const fetchedCity = b.city || s.city || "";
         if (deliveryCities.includes(fetchedCity)) {
           setValue("city", fetchedCity, { shouldValidate: true });
@@ -115,15 +144,19 @@ const CheckoutPage = () => {
       alert("Por favor, selecione uma cidade para a entrega.");
       return;
     }
-    
+    if (data.fulfillment === "pickup" && (!data.pickupDate || !data.pickupTime)) {
+      alert("Por favor, selecione a data e hora para o levantamento.");
+      return;
+    }
+
     setLoading(true);
     try {
       const orderData = {
         ...data,
         items: orderItems.map((item) => {
-          const isVariation =  item.type === "variable";
+          const isVariation = item.type === "variable";
           return {
-            product_id: isVariation ? item.parentId :item.id,
+            product_id: isVariation ? item.parentId : item.id,
             variation_id: isVariation && item.id,
             quantity: item.quantity,
           }
@@ -202,6 +235,14 @@ const CheckoutPage = () => {
                     )}
                   </div>
                   <div className="sm:col-span-2">
+                    <Label htmlFor="nif">Nº de Contribuinte (NIF)</Label>
+                    <Input
+                      id="nif"
+                      placeholder="123456789"
+                      {...register("nif")}
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
                     <Label htmlFor="email">Endereço de email</Label>
                     <Input
                       id="email"
@@ -241,8 +282,8 @@ const CheckoutPage = () => {
                         >
                           <Store className="w-5 h-5 text-green-600" />
                           <div className="flex flex-col">
-                            <span className="font-semibold">Retirada</span>
-                            <span className="text-xs text-muted-foreground">Retirar em ponto físico</span>
+                            <span className="font-semibold">Levantamento</span>
+                            <span className="text-xs text-muted-foreground">Levantamento no local</span>
                           </div>
                         </Label>
                       </div>
@@ -268,6 +309,40 @@ const CheckoutPage = () => {
                     </RadioGroup>
                   </div>
 
+                  {watch("fulfillment") === "pickup" && (
+                    <div className="sm:col-span-2 bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-4">
+                      <div>
+                        <h4 className="font-medium text-gray-900">Morada para levantamento:</h4>
+                        <p className="text-sm text-gray-600">N105 1449, 4835-517 Nespereira, Portugal</p>
+                        <p className="text-xs text-gray-500 mt-1">Horário: Seg-Sex 8:00-12:00 e 13:00-17:00</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="pickupDate">Data</Label>
+                          <Input
+                            id="pickupDate"
+                            type="date"
+                            {...register("pickupDate", { required: watch("fulfillment") === "pickup" ? "Data de levantamento é obrigatória" : false })}
+                          />
+                          {errors.pickupDate && (
+                            <div className="mt-1 text-xs text-red-600">{String(errors.pickupDate.message)}</div>
+                          )}
+                        </div>
+                        <div>
+                          <Label htmlFor="pickupTime">Hora</Label>
+                          <Input
+                            id="pickupTime"
+                            type="time"
+                            {...register("pickupTime", { required: watch("fulfillment") === "pickup" ? "Hora de levantamento é obrigatória" : false })}
+                          />
+                          {errors.pickupTime && (
+                            <div className="mt-1 text-xs text-red-600">{String(errors.pickupTime.message)}</div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {watch("fulfillment") === "delivery" && (
                     <>
                       <div className="sm:col-span-2">
@@ -275,15 +350,15 @@ const CheckoutPage = () => {
                         <Controller
                           name="city"
                           control={control}
-                          rules={{ required: "Cidade é obrigatória para entrega" }}
+                          rules={{ required: watch("fulfillment") === "delivery" ? "Cidade é obrigatória para entrega" : false }}
                           render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
                               <SelectTrigger>
                                 <SelectValue placeholder="Escolha sua cidade" />
                               </SelectTrigger>
-                              <SelectContent className="bg-white">
+                              <SelectContent className="bg-white max-h-60">
                                 {deliveryCities.map((city) => (
-                                  <SelectItem key={city} value={city}>
+                                  <SelectItem key={city} value={city} className="text-sm">
                                     {city}
                                   </SelectItem>
                                 ))}
@@ -302,7 +377,7 @@ const CheckoutPage = () => {
                           id="address"
                           placeholder="N.º, Rua, Localidade"
                           className={cn(errors.address && "border-red-500")}
-                          {...register("address", { required: "Morada é obrigatória para entrega" })}
+                          {...register("address", { required: watch("fulfillment") === "delivery" ? "Morada é obrigatória para entrega" : false })}
                         />
                         {errors.address && (
                           <div className="mt-1 text-xs text-red-600">{String(errors.address.message)}</div>
@@ -319,7 +394,7 @@ const CheckoutPage = () => {
                       </div>
                     </>
                   )}
-                  
+
                   <input
                     type="hidden"
                     {...register("country")}
@@ -416,7 +491,8 @@ const CheckoutPage = () => {
                   disabled={
                     loading ||
                     orderItems.length === 0 ||
-                    (watch("fulfillment") === "delivery" && !watch("city"))
+                    (watch("fulfillment") === "delivery" && !watch("city")) ||
+                    (watch("fulfillment") === "pickup" && (!watch("pickupDate") || !watch("pickupTime")))
                   }
                 >
                   {loading ? "A processar encomenda..." : "Finalizar encomenda"}
